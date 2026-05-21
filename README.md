@@ -110,7 +110,9 @@ http://127.0.0.1:4173/
 public/data/demo-dataset.json
 ```
 
-前端启动时会读取并校验该文件。核心结构：
+前端启动时会读取并校验该文件。当前版本已将 Claw 舆情样本更新为 2026-05-19 批次数据，用于展示近期外部舆情风险、政策不确定性和竞对 ESG 信号。
+
+核心结构：
 
 ```ts
 {
@@ -177,6 +179,7 @@ fetch('/api/v1/frontend/demo-dataset')
 public/
   brand/                 自制 Logo 与新能源背景素材
   data/demo-dataset.json 纯前端演示数据
+data/                    本地原始资料与中间数据，不参与前端运行
 src/
   components/            通用 UI 与图表组件
   lib/                   统计、格式化、聚合函数
