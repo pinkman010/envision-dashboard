@@ -1663,7 +1663,7 @@
       "companyId": "mingyang",
       "companyName": "Mingyang",
       "score": 74,
-      "disclosureDepth": "adequate",
+      "disclosureDepth": "weak",
       "evidence": "报告披露气候风险机会、年度碳排放数据和双碳战略管理机制，但范围3细分披露较弱。",
       "signal": "明阳以气候风险合规和能源管理表达为主，远景披露的范围3和供应链减排更深入。",
       "sourceReport": "MY-Sustainability Report_2024.pdf"
@@ -1676,7 +1676,7 @@
       "companyId": "envision",
       "companyName": "远景能源",
       "score": 89,
-      "disclosureDepth": "leading",
+      "disclosureDepth": "adequate",
       "evidence": "报告披露100%可再生电力、总能耗177478406.50 kWh，并说明能源管理和智能监测措施。",
       "signal": "远景能源管理与绿电采购结合紧密，Vestas更强调制造和服务环节能耗强度。",
       "sourceReport": "Envision Energy ESG Report 2024.pdf"
@@ -1728,7 +1728,7 @@
       "companyId": "mingyang",
       "companyName": "Mingyang",
       "score": 73,
-      "disclosureDepth": "adequate",
+      "disclosureDepth": "weak",
       "evidence": "报告披露能源管理体系、ISO 50001参考、能源审计和节能设备改造。",
       "signal": "明阳能源管理制度完整，远景的量化能耗和绿电结果更可展示。",
       "sourceReport": "MY-Sustainability Report_2024.pdf"
@@ -1793,7 +1793,7 @@
       "companyId": "mingyang",
       "companyName": "Mingyang",
       "score": 67,
-      "disclosureDepth": "weak",
+      "disclosureDepth": "missing",
       "evidence": "报告设置废弃物管理章节并披露绿色产品，但循环经济目标和资源流入量化较少。",
       "signal": "明阳循环经济披露较弱，远景和Vestas更适合作为Demo对标样本。",
       "sourceReport": "MY-Sustainability Report_2024.pdf"
@@ -1806,7 +1806,7 @@
       "companyId": "envision",
       "companyName": "远景能源",
       "score": 88,
-      "disclosureDepth": "leading",
+      "disclosureDepth": "adequate",
       "evidence": "报告披露供应商行为准则100%签署、123项尽调指标、现场检查访谈线上审核和整改追踪。",
       "signal": "远景供应链尽调模块细，Vestas更强调战略供应商Scope 3强度下降。",
       "sourceReport": "Envision Energy ESG Report 2024.pdf"
@@ -1858,7 +1858,7 @@
       "companyId": "mingyang",
       "companyName": "Mingyang",
       "score": 79,
-      "disclosureDepth": "adequate",
+      "disclosureDepth": "weak",
       "evidence": "报告披露所有供应商纳入审核计划、100%签署诚信协议，并披露供应商ESG培训和环境社会评估。",
       "signal": "明阳供应链台账指标较多，远景的价值链减排和供应商绿电目标更强。",
       "sourceReport": "MY-Sustainability Report_2024.pdf"
@@ -1923,7 +1923,7 @@
       "companyId": "mingyang",
       "companyName": "Mingyang",
       "score": 78,
-      "disclosureDepth": "adequate",
+      "disclosureDepth": "weak",
       "evidence": "报告披露安全生产管理制度、风险评估、120次安全检查和100%安全培训覆盖率。",
       "signal": "明阳基础安全管理数据完整，远景更适合作为行业安全绩效对标。",
       "sourceReport": "MY-Sustainability Report_2024.pdf"
@@ -2053,7 +2053,7 @@
       "companyId": "mingyang",
       "companyName": "Mingyang",
       "score": 77,
-      "disclosureDepth": "adequate",
+      "disclosureDepth": "weak",
       "evidence": "报告披露ESG治理战略、治理结构、利益相关方沟通和重大议题评估。",
       "signal": "明阳治理章节完整但国际标准对齐较弱，远景更适合展示跨标准分析。",
       "sourceReport": "MY-Sustainability Report_2024.pdf"
@@ -2170,7 +2170,7 @@
       "companyId": "goldwind",
       "companyName": "金风科技",
       "score": 78,
-      "disclosureDepth": "adequate",
+      "disclosureDepth": "weak",
       "evidence": "报告披露2025年生产运营水强度较2020年降低15%的目标和提升水质议题。",
       "signal": "金风目标清晰但数据细分有限，远景水资源KPI更完整。",
       "sourceReport": "Goldwind_Sustainability_Report_2024_English.pdf"
@@ -2183,7 +2183,7 @@
       "companyId": "mingyang",
       "companyName": "Mingyang",
       "score": 75,
-      "disclosureDepth": "adequate",
+      "disclosureDepth": "weak",
       "evidence": "报告设置水资源管理章节，并披露环境合规、污染排放和用水管理措施。",
       "signal": "明阳水资源管理有章节但量化较弱，远景更适合展示水披露证据链。",
       "sourceReport": "MY-Sustainability Report_2024.pdf"

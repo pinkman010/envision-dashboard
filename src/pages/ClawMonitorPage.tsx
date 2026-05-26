@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { AlertTriangle, FileText, Megaphone, ThumbsDown } from 'lucide-react'
 import type { DemoDataset, RiskLevel, Sentiment } from '../types/dataset'
 import { RiskBadge, SentimentBadge } from '../components/Badge'
 import { EChart } from '../components/EChart'
@@ -36,10 +37,10 @@ export function ClawMonitorPage({ dataset }: { dataset: DemoDataset }) {
   return (
     <div className="space-y-5">
       <div className="grid gap-4 md:grid-cols-4">
-        <Summary label="舆情条数" value={`${filtered.length}`} hint="当前筛选结果" />
-        <Summary label="总触达声量" value={formatNumber(totalReach)} hint="当前筛选舆情的估算传播规模合计" />
-        <Summary label="高风险事件" value={`${filtered.filter((item) => item.riskLevel === 'high').length}`} hint="需进入披露关注" />
-        <Summary label="负面声量" value={`${filtered.filter((item) => item.sentiment === 'negative').length}`} hint="关联实质性议题" />
+        <Summary label="舆情条数" value={`${filtered.length}`} hint="当前筛选结果" icon={FileText} tone="blue" />
+        <Summary label="总触达声量" value={formatNumber(totalReach)} hint="当前筛选舆情的估算传播规模合计" icon={Megaphone} tone="green" />
+        <Summary label="高风险事件" value={`${filtered.filter((item) => item.riskLevel === 'high').length}`} hint="需进入披露关注" icon={AlertTriangle} tone="red" />
+        <Summary label="负面声量" value={`${filtered.filter((item) => item.sentiment === 'negative').length}`} hint="关联实质性议题" icon={ThumbsDown} tone="amber" />
       </div>
 
       <Panel title="触达声量说明">
@@ -102,9 +103,9 @@ export function ClawMonitorPage({ dataset }: { dataset: DemoDataset }) {
                   <span className="font-medium text-slate-800">{item.topicName}</span>
                   <span className="text-slate-500">{formatNumber(item.reach)}</span>
                 </div>
-                <div className="mt-2 h-2 rounded bg-slate-100">
+                <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-100">
                   <div
-                    className="h-2 rounded bg-sky-500"
+                    className="h-full rounded-full bg-sky-500"
                     style={{ width: `${Math.min(100, Math.round((item.reach / Math.max(hotspots[0]?.reach ?? 1, 1)) * 100))}%` }}
                   />
                 </div>
@@ -117,7 +118,7 @@ export function ClawMonitorPage({ dataset }: { dataset: DemoDataset }) {
       <Panel title="Claw 舆情结果列表">
         <div className="space-y-3">
           {filtered.map((item) => (
-            <article key={item.id} className="rounded border border-slate-200 bg-white p-4">
+            <article key={item.id} className="rounded border border-slate-200 bg-white p-4 transition hover:border-slate-300 hover:shadow-sm">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <h3 className="font-semibold text-slate-950">{item.title}</h3>
@@ -144,11 +145,32 @@ export function ClawMonitorPage({ dataset }: { dataset: DemoDataset }) {
   )
 }
 
-function Summary({ label, value, hint }: { label: string; value: string; hint: string }) {
+const summaryToneMap = {
+  green: 'bg-gradient-to-br from-emerald-50 to-emerald-100 text-emerald-700',
+  blue: 'bg-gradient-to-br from-sky-50 to-sky-100 text-sky-700',
+  amber: 'bg-gradient-to-br from-amber-50 to-amber-100 text-amber-700',
+  red: 'bg-gradient-to-br from-rose-50 to-rose-100 text-rose-700',
+}
+
+const summaryBorderMap = {
+  green: 'border-emerald-200/60',
+  blue: 'border-sky-200/60',
+  amber: 'border-amber-200/60',
+  red: 'border-rose-200/60',
+}
+
+function Summary({ label, value, hint, icon: Icon, tone }: { label: string; value: string; hint: string; icon: React.ElementType; tone: 'green' | 'blue' | 'amber' | 'red' }) {
   return (
-    <section className="panel">
-      <p className="text-sm text-slate-500">{label}</p>
-      <p className="mt-2 text-3xl font-semibold text-slate-950">{value}</p>
+    <section className={`panel border ${summaryBorderMap[tone]}`}>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="text-sm text-slate-500">{label}</p>
+          <p className="mt-2 text-3xl font-semibold text-slate-950">{value}</p>
+        </div>
+        <span className={`rounded-lg p-2 ${summaryToneMap[tone]}`}>
+          <Icon className="h-5 w-5" />
+        </span>
+      </div>
       <p className="mt-2 text-xs text-slate-500">{hint}</p>
     </section>
   )

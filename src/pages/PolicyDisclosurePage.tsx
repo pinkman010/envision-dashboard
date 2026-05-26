@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { FileSearch } from 'lucide-react'
 import type { DemoDataset, Dimension, DisclosureGap, DisclosureStatus, GapLevel, RequirementType } from '../types/dataset'
 import {
   DimensionBadge,
@@ -45,15 +46,15 @@ export function PolicyDisclosurePage({ dataset }: { dataset: DemoDataset }) {
     <div className="space-y-5">
       <div className="grid gap-5 xl:grid-cols-[0.9fr,1.1fr]">
         <Panel title="标准覆盖概览">
-          <div className="grid gap-3 sm:grid-cols-2">
-            {[esrs, gri].map((item) => (
+          <div className="grid gap-3">
+            {[gri, esrs].map((item) => (
               <div key={item.standardType} className="rounded border border-slate-200 bg-slate-50 p-4">
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-semibold text-slate-950">{item.standardType}</p>
                   <p className="text-2xl font-semibold text-emerald-700">{item.completion}%</p>
                 </div>
-                <div className="mt-4 h-2 rounded bg-white">
-                  <div className="h-2 rounded bg-emerald-500" style={{ width: `${item.completion}%` }} />
+                <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-100">
+                  <div className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400" style={{ width: `${item.completion}%` }} />
                 </div>
                 <div className="mt-4 grid grid-cols-3 gap-2 text-center text-xs text-slate-500">
                   <span>已披露 {item.disclosed}</span>
@@ -114,8 +115,10 @@ export function PolicyDisclosurePage({ dataset }: { dataset: DemoDataset }) {
 function DisclosureGapTable({ items }: { items: DisclosureGap[] }) {
   if (items.length === 0) {
     return (
-      <div className="rounded border border-dashed border-slate-200 bg-slate-50 p-6 text-center text-sm text-slate-500">
-        当前条件下暂无对应披露差距结果
+      <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-slate-200 bg-slate-50/80 p-8 text-center">
+        <FileSearch className="h-8 w-8 text-slate-300" />
+        <p className="mt-3 text-sm font-medium text-slate-500">当前条件下暂无对应披露差距结果</p>
+        <p className="mt-1 text-xs text-slate-400">请尝试调整上方筛选条件</p>
       </div>
     )
   }
@@ -124,19 +127,19 @@ function DisclosureGapTable({ items }: { items: DisclosureGap[] }) {
     <div className="overflow-x-auto">
       <table className="min-w-[1100px] text-left text-sm">
         <thead>
-          <tr className="border-b border-slate-200 text-xs uppercase text-slate-500">
-            <th className="py-3 pr-4">条款</th>
-            <th className="py-3 pr-4">议题</th>
-            <th className="py-3 pr-4">属性</th>
-            <th className="py-3 pr-4">状态</th>
-            <th className="py-3 pr-4">差距</th>
-            <th className="py-3 pr-4">证据与建议</th>
-            <th className="py-3 text-right">优先级</th>
+          <tr className="border-b border-slate-200 bg-slate-50/80 text-xs uppercase text-slate-500">
+            <th className="py-3 pr-4 font-semibold">条款</th>
+            <th className="py-3 pr-4 font-semibold">议题</th>
+            <th className="py-3 pr-4 font-semibold">属性</th>
+            <th className="py-3 pr-4 font-semibold">状态</th>
+            <th className="py-3 pr-4 font-semibold">差距</th>
+            <th className="py-3 pr-4 font-semibold">证据与建议</th>
+            <th className="py-3 text-right font-semibold">优先级</th>
           </tr>
         </thead>
         <tbody>
           {items.map((item) => (
-            <tr key={item.id} className="border-b border-slate-100 align-top">
+            <tr key={item.id} className="border-b border-slate-100 align-top transition-colors hover:bg-slate-50 even:bg-slate-50/30">
               <td className="py-4 pr-4 font-semibold text-slate-950">{item.clauseId}</td>
               <td className="py-4 pr-4">
                 <div className="flex flex-col gap-2">

@@ -21,7 +21,7 @@ export function Panel({
             <div className="h-4 w-1 rounded-full bg-emerald-500" />
             <h2 className="text-base font-semibold text-slate-950">{title}</h2>
             {showInfo ? (
-              <Info className="h-4 w-4 text-slate-400" />
+              <Info className="h-4 w-4 cursor-help text-slate-400 transition-colors hover:text-emerald-600" />
             ) : null}
           </div>
           {action}

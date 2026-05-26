@@ -158,7 +158,7 @@ export function AppShell({
               </div>
               <button className="relative rounded border border-slate-200 bg-white p-2 text-slate-600" type="button">
                 <Bell className="h-5 w-5" />
-                <span className="absolute -right-1 -top-1 rounded-full bg-rose-500 px-1.5 text-[10px] font-semibold text-white">
+                <span className="absolute right-0 top-0 inline-flex h-4 min-w-[16px] -translate-y-1/3 translate-x-1/3 items-center justify-center rounded-full bg-rose-500 px-1 text-[10px] font-semibold text-white">
                   3
                 </span>
               </button>

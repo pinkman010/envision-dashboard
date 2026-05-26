@@ -28,8 +28,13 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
     minor: 'border-l-4 border-l-amber-400',
   }
 
+  const gapLevelBg: Record<string, string> = {
+    major: 'bg-rose-50/30',
+    minor: 'bg-amber-50/30',
+  }
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {/* Row 1: 统计卡 */}
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <MetricCard
@@ -103,12 +108,12 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
                     <span className="rounded-lg bg-gradient-to-br from-emerald-50 to-emerald-100 p-2 text-emerald-700 ring-1 ring-emerald-100/60">
                       <Icon className="h-5 w-5" />
                     </span>
-                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-100 text-[10px] font-bold text-slate-500">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-50 text-[10px] font-bold text-emerald-600 ring-1 ring-emerald-100">
                       0{index + 1}
                     </span>
                   </div>
                   <h3 className="mt-2 text-sm font-semibold text-slate-950">{item.title}</h3>
-                  <p className="mt-1 text-[11px] leading-4 text-slate-500">{item.desc}</p>
+                  <p className="mt-1 text-xs leading-4 text-slate-500">{item.desc}</p>
                 </div>
               )
             })}
@@ -123,7 +128,7 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
                   <span className="font-semibold text-slate-800">{item.standardType}</span>
                   <span className="text-sm font-bold text-emerald-600">{item.completion}%</span>
                 </div>
-                <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-slate-100">
+                <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-100">
                   <div
                     className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400"
                     style={{ width: `${item.completion}%` }}
@@ -131,15 +136,15 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
                 </div>
                 <div className="mt-2 flex gap-3 text-xs text-slate-500">
                   <span className="flex items-center gap-1">
-                    <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                    <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
                     已披露 {item.disclosed}
                   </span>
                   <span className="flex items-center gap-1">
-                    <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-400" />
+                    <span className="inline-block h-2 w-2 rounded-full bg-amber-400" />
                     部分 {item.partial}
                   </span>
                   <span className="flex items-center gap-1">
-                    <span className="inline-block h-1.5 w-1.5 rounded-full bg-slate-300" />
+                    <span className="inline-block h-2 w-2 rounded-full bg-slate-300" />
                     缺失 {item.missing}
                   </span>
                 </div>
@@ -153,18 +158,19 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
       <div className="grid gap-4 xl:grid-cols-[0.95fr,1.05fr]">
         <Panel title="披露差距分布" showInfo>
           <EChart
-            className="h-72 w-full"
+            className="h-[420px] w-full"
             option={{
               tooltip: { trigger: 'item' },
               color: ['#ef4444', '#f59e0b', '#10b981'],
-              legend: { bottom: 0, itemWidth: 10, itemHeight: 10, textStyle: { fontSize: 12 } },
+              legend: { bottom: 0, itemWidth: 12, itemHeight: 12, textStyle: { fontSize: 14 } },
               series: [
                 {
                   type: 'pie',
-                  radius: ['48%', '72%'],
-                  center: ['50%', '42%'],
+                  radius: ['44%', '70%'],
+                  center: ['50%', '46%'],
                   data: getGapDistribution(dataset.policyDisclosureAnalysis),
-                  label: { formatter: '{b}\n{c}项', fontSize: 12 },
+                  label: { formatter: '{b}\n{c}项', fontSize: 14, lineHeight: 16, overflow: 'break', width: 84 },
+                  labelLine: { length: 8, length2: 6 },
                 },
               ],
             }}
@@ -183,7 +189,7 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
             {keyGaps.map((item) => (
               <div
                 key={item.id}
-                className={`rounded-r-lg border border-l-0 border-slate-200 bg-white p-3 ${gapLevelBorder[item.gapLevel] || ''}`}
+                className={`rounded-lg border border-slate-200 p-3 ${gapLevelBorder[item.gapLevel] || ''} ${gapLevelBg[item.gapLevel] || 'bg-white'}`}
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>
