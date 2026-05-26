@@ -198,7 +198,7 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
                     </p>
                     <p className="mt-1 text-sm leading-6 text-slate-500">{item.recommendation}</p>
                   </div>
-                  <span className="text-xl font-bold tracking-tight text-rose-600">{item.priority}</span>
+                  <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-rose-100 text-base font-bold text-rose-700">{item.priority}</span>
                 </div>
               </div>
             ))}

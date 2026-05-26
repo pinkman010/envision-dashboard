@@ -33,6 +33,13 @@ const depthTextColor: Record<string, string> = {
   missing: 'text-rose-600',
 }
 
+const leftBorderMap: Record<string, string> = {
+  leading: 'border-l-emerald-500',
+  adequate: 'border-l-sky-500',
+  weak: 'border-l-amber-500',
+  missing: 'border-l-rose-500',
+}
+
 const getDisclosureDepthByScore = (score: number): DisclosureDepth => {
   if (score >= 90) return 'leading'
   if (score >= 80) return 'adequate'
@@ -178,7 +185,7 @@ export function MaterialityBenchmarkPage({ dataset }: { dataset: DemoDataset }) 
 
           <div className="grid gap-3 md:grid-cols-4">
             {scoreBands.map((item) => (
-              <div key={item.range} className="rounded border border-slate-200 bg-slate-50 p-3">
+              <div key={item.range} className={`rounded border border-slate-200 bg-slate-50 p-3 border-l-4 ${leftBorderMap[item.depth] ?? ''}`}>
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-sm font-semibold text-slate-950">{item.range}</span>
                   <span className={`text-xs font-semibold ${depthTextColor[item.depth]}`}>{depthLabel[item.depth]}</span>

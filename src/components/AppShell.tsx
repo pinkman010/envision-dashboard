@@ -146,7 +146,7 @@ export function AppShell({
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <label className="hidden min-w-[280px] items-center gap-2 rounded border border-slate-200 bg-white px-3 py-2 text-sm text-slate-500 md:flex">
+              <label className="hidden min-w-[280px] items-center gap-2 rounded border border-slate-200 bg-white px-3 py-2 text-sm text-slate-500 transition focus-within:border-emerald-500 focus-within:ring-1 focus-within:ring-emerald-100 md:flex">
                 <Search className="h-4 w-4" />
                 <input
                   className="w-full bg-transparent outline-none"
@@ -156,7 +156,7 @@ export function AppShell({
               <div className="rounded border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700">
                 {dataset.meta.reportYear} 年报告周期
               </div>
-              <button className="relative rounded border border-slate-200 bg-white p-2 text-slate-600" type="button">
+              <button className="relative rounded border border-slate-200 bg-white p-2 text-slate-600 transition hover:bg-slate-50 hover:text-slate-800" type="button">
                 <Bell className="h-5 w-5" />
                 <span className="absolute right-0 top-0 inline-flex h-4 min-w-[16px] -translate-y-1/3 translate-x-1/3 items-center justify-center rounded-full bg-rose-500 px-1 text-[10px] font-semibold text-white">
                   3
