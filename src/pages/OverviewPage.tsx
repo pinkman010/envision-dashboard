@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { AlertTriangle, BarChart3, Database, FileWarning, Network, ShieldAlert } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import type { DemoDataset } from '../types/dataset'
@@ -15,12 +16,31 @@ import {
 } from '../lib/analytics'
 
 export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
-  const metrics = getOverviewMetrics(dataset)
-  const standardProgress = getFullStandardProgress()
-  const hotspotTopics = getOpinionTopicHotspots(dataset.publicOpinion).slice(0, 5)
-  const keyGaps = sortByPriority(dataset.policyDisclosureAnalysis)
-    .filter((item) => item.gapLevel !== 'none')
-    .slice(0, 4)
+  const metrics = useMemo(() => getOverviewMetrics(dataset), [dataset])
+  const standardProgress = useMemo(() => getFullStandardProgress(), [])
+  const hotspotTopics = useMemo(() => getOpinionTopicHotspots(dataset.publicOpinion).slice(0, 5), [dataset.publicOpinion])
+  const keyGaps = useMemo(
+    () =>
+      sortByPriority(dataset.policyDisclosureAnalysis)
+        .filter((item) => item.gapLevel !== 'none')
+        .slice(0, 4),
+    [dataset.policyDisclosureAnalysis],
+  )
+
+  const sparklines = useMemo(
+    () => ({
+      totalGaps: generateSparkline(metrics.totalGaps, 'up'),
+      mandatoryGaps: generateSparkline(metrics.mandatoryGaps, 'up'),
+      averageEnvisionScore: generateSparkline(metrics.averageEnvisionScore, 'up'),
+      highRiskOpinions: generateSparkline(metrics.highRiskOpinions, 'down'),
+    }),
+    [metrics.totalGaps, metrics.mandatoryGaps, metrics.averageEnvisionScore, metrics.highRiskOpinions],
+  )
+
+  const gapDistribution = useMemo(
+    () => getGapDistribution(dataset.policyDisclosureAnalysis),
+    [dataset.policyDisclosureAnalysis],
+  )
 
   const gapLevelBorder: Record<string, string> = {
     major: 'border-l-4 border-l-rose-500',
@@ -42,7 +62,7 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
           hint={`重大差距 ${metrics.majorGaps} 项，优先进入披露补强清单`}
           icon={FileWarning}
           tone="red"
-          sparkline={generateSparkline(metrics.totalGaps, 'up')}
+          sparkline={sparklines.totalGaps}
           delta={{ value: 2, percent: 21.7, direction: 'up' }}
         />
         <MetricCard
@@ -51,7 +71,7 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
           hint="来自 ESRS 与 GRI 强制条款对照"
           icon={ShieldAlert}
           tone="amber"
-          sparkline={generateSparkline(metrics.mandatoryGaps, 'up')}
+          sparkline={sparklines.mandatoryGaps}
           delta={{ value: 1, percent: 15.3, direction: 'up' }}
         />
         <MetricCard
@@ -60,7 +80,7 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
           hint={`覆盖 ${metrics.benchmarkTopics} 个实质性议题`}
           icon={BarChart3}
           tone="green"
-          sparkline={generateSparkline(metrics.averageEnvisionScore, 'up')}
+          sparkline={sparklines.averageEnvisionScore}
           delta={{ value: 5, percent: 7.2, direction: 'up' }}
         />
         <MetricCard
@@ -69,7 +89,7 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
           hint={`负面舆情 ${metrics.negativeOpinions} 条，已关联议题库`}
           icon={AlertTriangle}
           tone="blue"
-          sparkline={generateSparkline(metrics.highRiskOpinions, 'down')}
+          sparkline={sparklines.highRiskOpinions}
           delta={{ value: 1, percent: 8.2, direction: 'down' }}
         />
       </div>
@@ -119,7 +139,7 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
           </div>
         </Panel>
 
-        <Panel title="标准匹配进度" showInfo>
+        <Panel title="标准匹配进度" showInfo infoTip="基于 ESRS 与 GRI 全量标准条款，统计已披露、部分披露、缺失与待人工确认的项目占比。">
           <div className="space-y-5">
             {standardProgress.map((item) => (
               <div key={item.standardType}>
@@ -159,7 +179,7 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
 
       {/* Row 3: 披露差距分布 + 优先披露补强项 */}
       <div className="grid gap-4 xl:grid-cols-[0.95fr,1.05fr]">
-        <Panel title="披露差距分布" showInfo>
+        <Panel title="披露差距分布" showInfo infoTip="按重大差距、轻微差距与无差距三类，汇总政策与披露分析结果。">
           <EChart
             className="h-[420px] w-full"
             option={{
@@ -171,7 +191,7 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
                   type: 'pie',
                   radius: ['44%', '70%'],
                   center: ['50%', '46%'],
-                  data: getGapDistribution(dataset.policyDisclosureAnalysis),
+                  data: gapDistribution,
                   label: { formatter: '{b}\n{c}项', fontSize: 14, lineHeight: 16, overflow: 'break', width: 84 },
                   labelLine: { length: 8, length2: 6 },
                 },

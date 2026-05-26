@@ -3,6 +3,7 @@ import type { DemoDataset, Dimension, DisclosureDepth } from '../types/dataset'
 import { DimensionBadge } from '../components/Badge'
 import { EChart } from '../components/EChart'
 import { Panel } from '../components/Panel'
+import { useCountUp } from '../hooks/useCountUp'
 import {
   dimensionLabel,
   getBenchmarkMatrix,
@@ -134,7 +135,7 @@ export function MaterialityBenchmarkPage({ dataset }: { dataset: DemoDataset }) 
                 key={item.topicId}
                 type="button"
                 onClick={() => setSelectedTopic(item.topicId)}
-                className={`w-full rounded border p-3 text-left transition ${selectedTopic === item.topicId ? 'border-emerald-300 bg-emerald-50 ring-1 ring-emerald-300' : 'border-slate-200 bg-white hover:border-emerald-300 hover:bg-emerald-50'}`}
+                className={`w-full rounded border p-3 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 ${selectedTopic === item.topicId ? 'border-emerald-300 bg-emerald-50 ring-1 ring-emerald-300' : 'border-slate-200 bg-white hover:border-emerald-300 hover:bg-emerald-50'}`}
               >
                 <div className="flex items-center justify-between gap-3">
                   <span className="font-semibold text-slate-950">{item.topicName}</span>
@@ -220,7 +221,7 @@ export function MaterialityBenchmarkPage({ dataset }: { dataset: DemoDataset }) 
               {matrix.map((row) => (
                 <tr key={row.topicId} className="border-b border-slate-100 transition-colors hover:bg-slate-50 even:bg-slate-50/30">
                   <td className="py-3 pr-4 font-semibold text-slate-950">
-                    <button type="button" onClick={() => setSelectedTopic(row.topicId)} className="hover:text-emerald-700">
+                    <button type="button" onClick={() => setSelectedTopic(row.topicId)} className="hover:text-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 rounded">
                       {row.topicName}
                     </button>
                   </td>
@@ -256,7 +257,7 @@ export function MaterialityBenchmarkPage({ dataset }: { dataset: DemoDataset }) 
                   <h3 className="text-sm font-semibold text-slate-950">{item.companyName}</h3>
                   <DimensionBadge value={item.dimension} />
                 </div>
-                <p className="mt-3 text-3xl font-semibold text-slate-950">{item.score}</p>
+                <AnimatedScore score={item.score} />
                 <p className={`mt-2 text-xs font-semibold ${depthTextColor[depth]}`}>{depthLabel[depth]}</p>
                 <p className="mt-3 text-xs leading-5 text-slate-600">{item.evidence}</p>
                 <p className="mt-3 text-xs leading-5 text-slate-500">判断：{item.signal}</p>
@@ -280,4 +281,9 @@ export function MaterialityBenchmarkPage({ dataset }: { dataset: DemoDataset }) 
       </Panel>
     </div>
   )
+}
+
+function AnimatedScore({ score }: { score: number }) {
+  const animatedValue = useCountUp(score)
+  return <p className="mt-3 text-3xl font-semibold text-slate-950">{animatedValue}</p>
 }

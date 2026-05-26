@@ -4,6 +4,7 @@ import type { DemoDataset, RiskLevel, Sentiment } from '../types/dataset'
 import { RiskBadge, SentimentBadge } from '../components/Badge'
 import { EChart } from '../components/EChart'
 import { Panel } from '../components/Panel'
+import { useCountUp } from '../hooks/useCountUp'
 import {
   formatNumber,
   getOpinionTopicHotspots,
@@ -168,12 +169,16 @@ const summaryBorderMap = {
 }
 
 function Summary({ label, value, hint, icon: Icon, tone }: { label: string; value: string; hint: string; icon: React.ElementType; tone: 'green' | 'blue' | 'amber' | 'red' }) {
+  const numericValue = parseInt(value.replace(/,/g, ''), 10) || 0
+  const animatedValue = useCountUp(numericValue)
+  const displayValue = Number.isNaN(numericValue) ? value : animatedValue.toLocaleString('zh-CN')
+
   return (
     <section className={`panel border ${summaryBorderMap[tone]}`}>
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-sm text-slate-500">{label}</p>
-          <p className="mt-2 text-3xl font-semibold text-slate-950">{value}</p>
+          <p className="mt-2 text-3xl font-semibold text-slate-950">{displayValue}</p>
         </div>
         <span className={`rounded-lg p-2 ${summaryToneMap[tone]}`}>
           <Icon className="h-5 w-5" />

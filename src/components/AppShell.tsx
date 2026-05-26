@@ -10,6 +10,7 @@ import {
 } from 'lucide-react'
 import clsx from 'clsx'
 import type { DemoDataset } from '../types/dataset'
+import { BackToTop } from './BackToTop'
 
 const navItems = [
   { to: '/', label: '首页总览', icon: Gauge },
@@ -95,7 +96,6 @@ export function AppShell({
 }) {
   const location = useLocation()
   const currentMeta = pageMeta[location.pathname] ?? pageMeta['/']
-
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-[236px] border-r border-slate-200 bg-white lg:block">
@@ -146,7 +146,7 @@ export function AppShell({
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <label className="hidden min-w-[280px] items-center gap-2 rounded border border-slate-200 bg-white px-3 py-2 text-sm text-slate-500 transition focus-within:border-emerald-500 focus-within:ring-1 focus-within:ring-emerald-100 md:flex">
+              <label className="hidden min-w-[280px] items-center gap-2 rounded border border-slate-200 bg-white px-3 py-2 text-sm text-slate-500 transition focus-within:border-emerald-500 focus-within:ring-1 focus-within:ring-emerald-100 focus-within:shadow-md md:flex">
                 <Search className="h-4 w-4" />
                 <input
                   className="w-full bg-transparent outline-none"
@@ -156,7 +156,11 @@ export function AppShell({
               <div className="rounded border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700">
                 {dataset.meta.reportYear} 年报告周期
               </div>
-              <button className="relative rounded border border-slate-200 bg-white p-2 text-slate-600 transition hover:bg-slate-50 hover:text-slate-800" type="button">
+              <button
+                className="relative rounded border border-slate-200 bg-white p-2 text-slate-600 transition hover:bg-slate-50 hover:text-slate-800 hover:scale-95 active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50"
+                type="button"
+                aria-label="通知"
+              >
                 <Bell className="h-5 w-5" />
                 <span className="absolute right-0 top-0 inline-flex h-4 min-w-[16px] -translate-y-1/3 translate-x-1/3 items-center justify-center rounded-full bg-rose-500 px-1 text-[10px] font-semibold text-white">
                   3
@@ -187,7 +191,12 @@ export function AppShell({
             })}
           </nav>
         </header>
-        <main className="px-4 py-5 lg:px-7">{children}</main>
+        <main className="px-4 py-5 lg:px-7">
+          <div key={location.pathname} className="animate-fade-in">
+            {children}
+          </div>
+        </main>
+        <BackToTop />
         <footer className="border-t border-slate-200 bg-white/80 px-4 py-3 text-xs text-slate-500 backdrop-blur lg:px-7">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <span>数据截止：{new Date(dataset.meta.generatedAt).toLocaleString('zh-CN')}</span>

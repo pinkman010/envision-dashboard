@@ -1,3 +1,4 @@
+import { useCountUp } from '../hooks/useCountUp'
 import type { LucideIcon } from 'lucide-react'
 
 interface MetricCardProps {
@@ -8,6 +9,7 @@ interface MetricCardProps {
   tone: 'green' | 'blue' | 'amber' | 'red'
   sparkline?: number[]
   delta?: { value: number; percent: number; direction: 'up' | 'down' }
+  animate?: boolean
 }
 
 const toneMap = {
@@ -58,13 +60,17 @@ function Sparkline({ data, tone }: { data: number[]; tone: MetricCardProps['tone
   )
 }
 
-export function MetricCard({ label, value, hint, icon: Icon, tone, sparkline, delta }: MetricCardProps) {
+export function MetricCard({ label, value, hint, icon: Icon, tone, sparkline, delta, animate = true }: MetricCardProps) {
+  const numericValue = parseInt(value.replace(/,/g, ''), 10) || 0
+  const animatedValue = useCountUp(numericValue, 600, animate)
+  const displayValue = Number.isNaN(numericValue) ? value : animatedValue.toLocaleString('zh-CN')
+
   return (
     <section className={`panel min-h-[118px] border ${toneBorder[tone]}`}>
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1">
           <p className="text-sm text-slate-500">{label}</p>
-          <p className="mt-2 text-3xl font-semibold tracking-tight text-slate-950">{value}</p>
+          <p className="mt-2 text-3xl font-semibold tracking-tight text-slate-950">{displayValue}</p>
           {delta ? (
             <div className="mt-1.5 flex items-center gap-1 text-xs">
               <span className={delta.direction === 'up' ? 'text-emerald-600' : 'text-rose-500'}>

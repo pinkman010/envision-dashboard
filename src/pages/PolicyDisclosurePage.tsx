@@ -9,6 +9,7 @@ import {
 } from '../components/Badge'
 import { EChart } from '../components/EChart'
 import { Panel } from '../components/Panel'
+import { useCountUp } from '../hooks/useCountUp'
 import {
   dimensionLabel,
   formatNumber,
@@ -91,11 +92,23 @@ export function PolicyDisclosurePage({ dataset }: { dataset: DemoDataset }) {
                 <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-100">
                   <div className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400" style={{ width: `${item.completion}%` }} />
                 </div>
-                <div className="mt-4 grid grid-cols-2 gap-2 text-center text-xs text-slate-500 sm:grid-cols-4">
-                  <span>已披露 {item.disclosed}</span>
-                  <span>部分 {item.partial}</span>
-                  <span>未披露 {item.missing}</span>
-                  <span>待确认 {item.pending}</span>
+                <div className="mt-4 flex flex-wrap gap-x-3 gap-y-1 text-xs text-slate-500">
+                  <span className="flex items-center gap-1">
+                    <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
+                    已披露 {item.disclosed}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <span className="inline-block h-2 w-2 rounded-full bg-amber-400" />
+                    部分 {item.partial}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <span className="inline-block h-2 w-2 rounded-full bg-slate-300" />
+                    缺失 {item.missing}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <span className="inline-block h-2 w-2 rounded-full bg-slate-400" />
+                    待确认 {item.pending}
+                  </span>
                 </div>
               </div>
             ))}
@@ -182,10 +195,14 @@ export function PolicyDisclosurePage({ dataset }: { dataset: DemoDataset }) {
 }
 
 function SummaryStat({ label, value }: { label: string; value: string }) {
+  const numericValue = parseInt(value.replace(/,/g, ''), 10) || 0
+  const animatedValue = useCountUp(numericValue)
+  const displayValue = Number.isNaN(numericValue) ? value : animatedValue.toLocaleString('zh-CN')
+
   return (
     <div className="rounded border border-slate-200 bg-white px-4 py-3">
       <p className="text-xs font-semibold text-slate-500">{label}</p>
-      <p className="mt-2 text-2xl font-semibold text-slate-950">{value}</p>
+      <p className="mt-2 text-2xl font-semibold text-slate-950">{displayValue}</p>
     </div>
   )
 }
