@@ -85,7 +85,7 @@ export function PolicyDisclosurePage({ dataset }: { dataset: DemoDataset }) {
   return (
     <div className="space-y-5">
       <div className="grid gap-5 xl:grid-cols-[0.9fr,1.1fr]">
-        <Panel title="标准覆盖概览">
+        <Panel title="标准覆盖概览" className="animate-fade-in-delay-1">
           <div className="grid gap-3">
             {standardProgress.map((item) => (
               <div key={item.standardType} className="rounded border border-slate-200 bg-slate-50 p-4">
@@ -119,7 +119,7 @@ export function PolicyDisclosurePage({ dataset }: { dataset: DemoDataset }) {
           </div>
         </Panel>
 
-        <Panel title="披露属性状态">
+        <Panel title="披露属性状态" className="animate-fade-in-delay-2">
           <EChart
             className="h-56 w-full"
             option={{
@@ -291,7 +291,7 @@ const topGapLevelMap: Record<string, GapLevel> = {
 
 function TopGapTable({ items }: { items: typeof fullStandardSummary.topGaps }) {
   return (
-    <div className="overflow-x-auto">
+    <div className="max-h-[440px] overflow-auto pr-2 [scrollbar-gutter:stable]">
       <table className="w-full min-w-[960px] table-fixed text-left text-sm">
         <colgroup>
           <col className="w-[7%]" />
@@ -314,7 +314,7 @@ function TopGapTable({ items }: { items: typeof fullStandardSummary.topGaps }) {
           </tr>
         </thead>
         <tbody>
-          {items.map((item, index) => {
+          {items.slice(0, 10).map((item, index) => {
             const rank = index + 1
             const rankStyle =
               rank === 1
