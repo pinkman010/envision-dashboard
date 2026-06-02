@@ -28,6 +28,7 @@ import {
   getReviewStatus,
   sortByPriority,
 } from '../lib/analytics'
+import { chartPalette } from '../lib/chartTheme'
 
 export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
   const metrics = useMemo(() => getMetricTrends(dataset), [dataset])
@@ -79,7 +80,7 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
   const kpiTones: Array<'green' | 'blue' | 'amber' | 'red'> = ['green', 'blue', 'amber', 'red']
   const reviewChartOption = useMemo<EChartsOption>(
     () => ({
-      color: reviewStatus.items.map((item) => item.color),
+      color: chartPalette.reviewPie,
       tooltip: {
         trigger: 'item',
         formatter: '{b}: {c} 项 ({d}%)',

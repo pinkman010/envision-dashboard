@@ -1,4 +1,4 @@
-import { useLayoutEffect } from 'react'
+import { useLayoutEffect, useState } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import {
   BarChart3,
@@ -8,6 +8,7 @@ import {
   Network,
   Search,
   ShieldCheck,
+  X,
 } from 'lucide-react'
 import clsx from 'clsx'
 import type { DemoDataset } from '../types/dataset'
@@ -99,6 +100,7 @@ export function AppShell({
 }) {
   const location = useLocation()
   const currentMeta = pageMeta[location.pathname] ?? pageMeta['/']
+  const [searchOpen, setSearchOpen] = useState(false)
 
   useLayoutEffect(() => {
     const previousScrollRestoration = window.history.scrollRestoration
@@ -177,13 +179,34 @@ export function AppShell({
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <label className="hidden min-w-[280px] items-center gap-2 rounded border border-slate-200 bg-white px-3 py-2 text-sm text-slate-500 transition focus-within:border-emerald-500 focus-within:ring-1 focus-within:ring-emerald-100 focus-within:shadow-md md:flex">
-                <Search className="h-4 w-4" />
-                <input
-                  className="w-full bg-transparent outline-none"
-                  placeholder="搜索报告、标准、议题、舆情..."
-                />
-              </label>
+              {searchOpen ? (
+                <div className="hidden items-center gap-2 rounded border border-emerald-300 bg-white px-3 py-2 shadow-md ring-1 ring-emerald-100 transition md:flex">
+                  <Search className="h-4 w-4 text-emerald-600" />
+                  <input
+                    autoFocus
+                    className="w-[240px] bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400"
+                    placeholder="搜索报告、标准、议题、舆情..."
+                    onBlur={() => setSearchOpen(false)}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setSearchOpen(false)}
+                    className="rounded p-0.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setSearchOpen(true)}
+                  className="hidden items-center gap-2 rounded border border-slate-200 bg-white px-3 py-2 text-sm text-slate-400 transition hover:border-slate-300 hover:text-slate-600 md:flex"
+                  title="搜索"
+                >
+                  <Search className="h-4 w-4" />
+                  <span className="text-xs">搜索...</span>
+                </button>
+              )}
               <div className="rounded border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700">
                 {dataset.meta.reportYear} 年报告周期
               </div>

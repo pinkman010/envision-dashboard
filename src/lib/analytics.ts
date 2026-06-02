@@ -259,8 +259,8 @@ export const getReviewStatus = (dataset: DemoDataset): { items: ReviewStatusItem
   const items: ReviewStatusItem[] = [
     { name: '待复核', count: reviewCount, color: '#f59e0b' },
     { name: '已通过', count: 0, color: '#10b981' },
-    { name: '已修改', count: 0, color: '#3b82f6' },
-    { name: '不采纳', count: 0, color: '#ef4444' },
+    { name: '已修改', count: 0, color: '#0ea5e9' },
+    { name: '不采纳', count: 0, color: '#f43f5e' },
   ]
 
   return { items, total: items.reduce((sum, i) => sum + i.count, 0) }
