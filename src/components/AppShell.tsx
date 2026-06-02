@@ -21,56 +21,51 @@ const navItems = [
   { to: '/claw', label: 'Claw 舆情监测', icon: Network },
 ]
 
-const pageMeta: Record<string, { title: string; description: string; visual?: string }> = {
+const pageMeta: Record<string, { title: string; description: string; visual: string; visualPosition: string }> = {
   '/': {
     title: '首页总览',
     description: 'ESG 披露、竞对议题与 Claw 舆情一体化展示',
+    visual: '/visuals/sidebar-renewable-energy.webp',
+    visualPosition: 'object-[22%_42%]',
   },
   '/policy': {
     title: '政策与 ESG 报告披露分析',
     description: '以远景能源 2024 年 ESG 报告为对象，对照 ESRS / GRI 条款识别强制披露缺口和补充建议。',
     visual: '/visuals/module-policy-disclosure.webp',
+    visualPosition: 'object-[34%_50%]',
   },
   '/benchmark': {
     title: '实质性议题竞对分析',
     description: '固定范围：远景能源、西门子能源、VESTAS、明阳智能、金风科技。对比议题覆盖、披露深度和证据质量。',
     visual: '/visuals/module-materiality-benchmark.webp',
+    visualPosition: 'object-[64%_48%]',
   },
   '/claw': {
     title: 'Claw 舆情监测',
     description: '展示 Claw 工具抓取后的舆情结果，用于说明外部声量如何影响实质性议题判断。',
     visual: '/visuals/module-claw-monitor.webp',
+    visualPosition: 'object-[34%_58%]',
   },
 }
 
 function BrandWordmark({ compact = false }: { compact?: boolean }) {
   return (
-    <div className={clsx('flex items-center', compact ? 'gap-2 py-1' : 'gap-3 py-0.5')}>
+    <div className={clsx('flex flex-col items-center', compact ? 'gap-1 py-1' : 'gap-1.5 py-0.5')}> 
       <img
-        src="/brand/envision-logo.svg"
-        alt="远景能源标识"
+        src="/brand/envision-wordmark.png"
+        alt="Envision"
         className={clsx(
-          'shrink-0 drop-shadow-sm',
-          compact ? 'h-8 w-8' : 'h-10 w-10',
+          'w-auto shrink-0 object-contain drop-shadow-sm',
+          compact ? 'h-6' : 'h-7',
         )}
       />
-      <div className="leading-none">
-        <div
-          className={clsx(
-            'font-semibold tracking-normal text-[#0d6672]',
-            compact ? 'text-lg' : 'text-2xl',
-          )}
-        >
-          远景能源
-        </div>
-        <div
-          className={clsx(
-            'mt-1 whitespace-nowrap font-semibold uppercase tracking-[0.05em] text-[#5b7b80]',
-            compact ? 'text-[10px]' : 'text-sm',
-          )}
-        >
-          ESG智能分析系统
-        </div>
+      <div
+        className={clsx(
+          'whitespace-nowrap font-semibold tracking-[0.04em] text-[#0d6672]',
+          compact ? 'text-[10px]' : 'text-lg md:text-xl',
+        )}
+      >
+        ESG智能分析系统
       </div>
     </div>
   )
@@ -149,9 +144,9 @@ export function AppShell({
           src="/visuals/sidebar-renewable-energy.webp"
           alt=""
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 h-[124%] w-full object-cover object-left-top opacity-[0.48] brightness-95 saturate-125 contrast-125"
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover object-[88%_58%] opacity-[0.48] brightness-95 saturate-125 contrast-125"
         />
-        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.68)_0%,rgba(255,255,255,0.52)_28%,rgba(255,255,255,0.36)_58%,rgba(236,253,245,0.26)_100%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.66)_0%,rgba(255,255,255,0.50)_28%,rgba(255,255,255,0.34)_58%,rgba(236,253,245,0.24)_100%)]" />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_76%_10%,rgba(20,184,166,0.12),transparent_38%),radial-gradient(circle_at_25%_86%,rgba(16,185,129,0.12),transparent_34%)]" />
         <div className="relative flex h-full flex-col">
           <div className="border-b border-white/70 bg-white/52 px-5 py-5 backdrop-blur-md">
@@ -186,24 +181,21 @@ export function AppShell({
       </aside>
 
       <div className="lg:pl-[236px]">
-        <header className="sticky top-0 z-20 overflow-hidden border-b border-emerald-100/70 bg-white/78 px-4 py-3 backdrop-blur-xl lg:px-7">
-          {currentMeta.visual ? (
+        <header className="sticky top-0 z-20 overflow-hidden border-b border-emerald-100/70 bg-white/70 px-4 py-3 backdrop-blur-xl lg:px-7">
+          <div className="pointer-events-none absolute inset-y-0 right-8 hidden w-[50vw] min-w-[380px] max-w-[720px] overflow-hidden md:block lg:right-[214px]">
             <img
               src={currentMeta.visual}
               alt=""
               aria-hidden="true"
-              className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center opacity-[0.36] saturate-110"
+              className={clsx(
+                'absolute inset-0 h-full w-full scale-125 object-cover opacity-[0.88] brightness-95 saturate-135 contrast-125',
+                currentMeta.visualPosition,
+              )}
             />
-          ) : null}
+            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.78)_0%,rgba(255,255,255,0.10)_42%,rgba(255,255,255,0.36)_100%)]" />
+          </div>
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_0%,rgba(16,185,129,0.16),transparent_34%),radial-gradient(circle_at_78%_18%,rgba(14,165,233,0.10),transparent_30%)]" />
-          <div
-            className={clsx(
-              'pointer-events-none absolute inset-0',
-              currentMeta.visual
-                ? 'bg-[linear-gradient(90deg,rgba(255,255,255,0.92)_0%,rgba(255,255,255,0.78)_54%,rgba(255,255,255,0.68)_100%)]'
-                : 'bg-[linear-gradient(180deg,rgba(255,255,255,0.82),rgba(255,255,255,0.62))]',
-            )}
-          />
+          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.90)_0%,rgba(255,255,255,0.62)_50%,rgba(255,255,255,0.28)_100%)]" />
           <div className="relative flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-3">
               <div className="lg:hidden">
