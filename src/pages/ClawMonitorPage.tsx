@@ -13,7 +13,14 @@ import {
   riskLevelLabel,
   sentimentLabel,
 } from '../lib/analytics'
-import { chartPalette } from '../lib/chartTheme'
+import {
+  chartCategoryAxis,
+  chartGrid,
+  chartLegend,
+  chartPalette,
+  chartTooltip,
+  chartValueAxis,
+} from '../lib/chartTheme'
 
 type Filter<T extends string> = 'all' | T
 
@@ -105,19 +112,19 @@ export function ClawMonitorPage({ dataset }: { dataset: DemoDataset }) {
 
       <Panel title="声量指数说明">
         <div className="grid gap-3 lg:grid-cols-[1fr,1fr,1fr]">
-          <div className="rounded border border-slate-200 bg-slate-50 p-4">
+          <div className="subpanel-muted p-4">
             <p className="text-sm font-semibold text-slate-950">平均声量指数</p>
             <p className="mt-2 text-sm leading-6 text-slate-600">
               表示当前筛选范围内单条舆情的平均关注强度，用来判断外部关注是否集中升温。
             </p>
           </div>
-          <div className="rounded border border-slate-200 bg-slate-50 p-4">
+          <div className="subpanel-muted p-4">
             <p className="text-sm font-semibold text-slate-950">单条指数来源</p>
             <p className="mt-2 text-sm leading-6 text-slate-600">
               单条舆情指数由 Claw 综合媒体来源、转载引用、平台传播范围和事件热度估算，范围为 10-100。
             </p>
           </div>
-          <div className="rounded border border-amber-100 bg-amber-50 p-4">
+          <div className="subpanel p-4 border-amber-100 bg-amber-50/70">
             <p className="text-sm font-semibold text-amber-900">使用限制</p>
             <p className="mt-2 text-sm leading-6 text-slate-700">
               声量指数是相对强度指标，不代表精确阅读人数或官方流量；筛选条件变化后，平均指数和热点议题会同步重算。
@@ -140,16 +147,16 @@ export function ClawMonitorPage({ dataset }: { dataset: DemoDataset }) {
           <EChart
             className="h-72 w-full"
             option={{
-              tooltip: { trigger: 'axis' },
+              tooltip: { ...chartTooltip, trigger: 'axis' },
               color: chartPalette.riskLine,
-              legend: { bottom: 0 },
-              grid: { left: 28, right: 16, top: 20, bottom: 44 },
-              xAxis: { type: 'category', data: trend.map((item) => item.day) },
-              yAxis: { type: 'value', minInterval: 1 },
+              legend: chartLegend,
+              grid: { ...chartGrid, left: 30, bottom: 44 },
+              xAxis: { ...chartCategoryAxis, type: 'category', data: trend.map((item) => item.day) },
+              yAxis: { ...chartValueAxis, type: 'value', minInterval: 1 },
               series: [
-                { name: '高风险', type: 'line', smooth: true, data: trend.map((item) => item.high) },
-                { name: '中风险', type: 'line', smooth: true, data: trend.map((item) => item.medium) },
-                { name: '低风险', type: 'line', smooth: true, data: trend.map((item) => item.low) },
+                { name: '高风险', type: 'line', smooth: true, symbolSize: 5, lineStyle: { width: 2 }, data: trend.map((item) => item.high) },
+                { name: '中风险', type: 'line', smooth: true, symbolSize: 5, lineStyle: { width: 2 }, data: trend.map((item) => item.medium) },
+                { name: '低风险', type: 'line', smooth: true, symbolSize: 5, lineStyle: { width: 2 }, data: trend.map((item) => item.low) },
               ],
             }}
           />
@@ -186,7 +193,7 @@ export function ClawMonitorPage({ dataset }: { dataset: DemoDataset }) {
             <button
               type="button"
               onClick={() => { setCompany('all'); setSentiment('all'); setRisk('all') }}
-              className="mt-4 inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-600 transition hover:border-emerald-300 hover:text-emerald-700 hover:shadow-sm"
+              className="mt-4 inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-600 transition hover:border-emerald-300 hover:bg-slate-50 hover:text-emerald-700"
             >
               <RotateCcw className="h-3.5 w-3.5" />
               重置筛选条件
@@ -196,7 +203,7 @@ export function ClawMonitorPage({ dataset }: { dataset: DemoDataset }) {
           <div className="max-h-[1624px] overflow-y-auto overscroll-contain pr-2 [scrollbar-gutter:stable]">
             <div className="space-y-3">
               {filtered.map((item) => (
-                <article key={item.id} className="rounded border border-slate-200 bg-white p-4 transition hover:border-slate-300 hover:shadow-sm">
+                <article key={item.id} className="subpanel p-4 transition hover:border-slate-300 hover:bg-slate-100/70">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
                       <h3 className="font-semibold text-slate-950">{item.title}</h3>
@@ -240,4 +247,3 @@ function getOpinionDailySparkline(
     .sort(([left], [right]) => left.localeCompare(right))
     .map(([, values]) => getValue(values))
 }
-

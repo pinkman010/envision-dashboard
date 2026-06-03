@@ -28,7 +28,12 @@ import {
   getReviewStatus,
   sortByPriority,
 } from '../lib/analytics'
-import { chartPalette } from '../lib/chartTheme'
+import {
+  chartCenterTitle,
+  chartPalette,
+  chartPieItemStyle,
+  chartTooltip,
+} from '../lib/chartTheme'
 
 export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
   const metrics = useMemo(() => getMetricTrends(dataset), [dataset])
@@ -54,8 +59,8 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
   }
 
   const gapLevelBg: Record<string, string> = {
-    major: 'bg-rose-50/30',
-    minor: 'bg-amber-50/30',
+    major: '',
+    minor: '',
   }
 
   const gapDistributionTone: Record<string, string> = {
@@ -64,9 +69,9 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
     无差距: 'bg-emerald-500',
   }
   const gapDistributionCardTone: Record<string, string> = {
-    重大差距: 'border-rose-100 bg-rose-50/70 text-rose-700',
-    轻微差距: 'border-amber-100 bg-amber-50/70 text-amber-700',
-    无差距: 'border-emerald-100 bg-emerald-50/70 text-emerald-700',
+    重大差距: 'text-rose-700',
+    轻微差距: 'text-amber-700',
+    无差距: 'text-emerald-700',
   }
   const standardSegmentMeta = [
     { key: 'disclosed', label: '已披露', bar: 'bg-emerald-500' },
@@ -82,6 +87,7 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
     () => ({
       color: chartPalette.reviewPie,
       tooltip: {
+        ...chartTooltip,
         trigger: 'item',
         formatter: '{b}: {c} 项 ({d}%)',
       },
@@ -90,16 +96,7 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
         subtext: '合计',
         left: 'center',
         top: '38%',
-        textStyle: {
-          color: '#0f172a',
-          fontSize: 24,
-          fontWeight: 700,
-        },
-        subtextStyle: {
-          color: '#64748b',
-          fontSize: 12,
-          fontWeight: 500,
-        },
+        ...chartCenterTitle,
       },
       series: [
         {
@@ -108,11 +105,7 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
           radius: ['58%', '78%'],
           center: ['50%', '48%'],
           avoidLabelOverlap: true,
-          itemStyle: {
-            borderColor: '#ffffff',
-            borderWidth: 3,
-            borderRadius: 6,
-          },
+          itemStyle: chartPieItemStyle,
           label: {
             show: false,
           },
@@ -153,7 +146,7 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
           {aiFlow.map((node, index) => {
             const isLast = index === aiFlow.length - 1
             return (
-              <div key={node.id} className="relative flex items-center gap-2 rounded-lg border border-slate-100 bg-slate-50 px-3 py-2">
+              <div key={node.id} className="subpanel-muted relative flex items-center gap-2 px-3 py-2">
                 <div
                   className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
                     node.status === 'completed'
@@ -184,7 +177,7 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
               const total = Math.max(item.total, 1)
 
               return (
-                <div key={item.standardType} className="flex min-h-[132px] flex-col justify-between rounded-lg border border-slate-200/80 bg-gradient-to-b from-white to-slate-50/70 p-3">
+                <div key={item.standardType} className="subpanel flex min-h-[132px] flex-col justify-between">
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">{item.standardType}</p>
@@ -224,7 +217,7 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
 
         <Panel title="披露差距分布" className="h-full" showInfo infoTip="基于 ESRS 与 GRI 全量标准库，待人工确认纳入轻微差距统计。">
           <div className="flex min-h-[294px] flex-col justify-between gap-3">
-            <div className="rounded-lg border border-emerald-100 bg-gradient-to-br from-emerald-50 via-white to-slate-50 p-3">
+            <div className="subpanel-accent">
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">ESRS / GRI</p>
@@ -258,7 +251,7 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
                 const displayPercent = item.value > 0 && rawPercent < 1 ? '<1%' : `${percent}%`
 
                 return (
-                  <div key={item.name} className={`rounded-lg border px-3 py-1.5 shadow-sm shadow-slate-100/60 ${gapDistributionCardTone[item.name] ?? 'border-slate-200 bg-slate-50 text-slate-700'}`}>
+                  <div key={item.name} className={`subpanel-muted px-3 py-1.5 ${gapDistributionCardTone[item.name] ?? 'text-slate-700'}`}>
                     <div className="flex items-center justify-between gap-3">
                       <span className="text-xs font-semibold">{item.name}</span>
                       <span className="text-xs font-bold">{displayPercent}</span>
@@ -302,7 +295,7 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
                 )
 
               return (
-                <div key={task.id} className="rounded-lg border border-slate-200/80 bg-white p-2.5 transition hover:shadow-sm">
+                <div key={task.id} className="subpanel-muted p-2.5 transition hover:bg-slate-100/70">
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-semibold text-slate-950">{task.title}</p>
@@ -347,7 +340,7 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
                 const percent = reviewStatus.total > 0 ? Math.round((item.count / reviewStatus.total) * 100) : 0
 
                 return (
-                  <div key={item.name} className="rounded-lg border border-slate-200/80 bg-white px-2.5 py-2">
+                  <div key={item.name} className="subpanel-muted px-2.5 py-2">
                     <div className="flex items-center gap-1.5">
                       <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: item.color }} />
                       <span className="text-xs font-semibold text-slate-700">{item.name}</span>
@@ -377,7 +370,7 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
           {keyGaps.map((item) => (
             <div
               key={item.id}
-              className={`rounded-lg border border-slate-200 p-3 ${gapLevelBorder[item.gapLevel] || ''} ${gapLevelBg[item.gapLevel] || 'bg-white'}`}
+              className={`subpanel p-3 ${gapLevelBorder[item.gapLevel] || ''} ${gapLevelBg[item.gapLevel] || ''}`}
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
@@ -401,7 +394,7 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
           {hotspotTopics.map((item) => (
             <div
               key={item.topicName}
-              className="group rounded-lg border border-slate-200/80 bg-white p-3 transition hover:-translate-y-0.5 hover:shadow-md"
+              className="subpanel-muted p-3 transition hover:bg-slate-100/70"
             >
               <p className="text-sm font-semibold text-slate-950">{item.topicName}</p>
               <p className="mt-2 text-2xl font-bold tracking-tight text-slate-950">{formatNumber(item.reach)}</p>

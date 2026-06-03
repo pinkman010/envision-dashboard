@@ -22,7 +22,13 @@ import {
   requirementLabel,
   sortByPriority,
 } from '../lib/analytics'
-import { chartPalette } from '../lib/chartTheme'
+import {
+  chartCategoryAxis,
+  chartGrid,
+  chartPalette,
+  chartTooltip,
+  chartValueAxis,
+} from '../lib/chartTheme'
 
 type FilterValue<T extends string> = 'all' | T
 
@@ -93,7 +99,7 @@ export function PolicyDisclosurePage({ dataset }: { dataset: DemoDataset }) {
         <Panel title="标准覆盖概览">
           <div className="grid gap-3">
             {standardProgress.map((item) => (
-              <div key={item.standardType} className="rounded border border-slate-200 bg-slate-50 p-4">
+              <div key={item.standardType} className="subpanel p-4">
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-semibold text-slate-950">{item.standardType}</p>
                   <p className="text-2xl font-semibold text-emerald-700">{item.completion}%</p>
@@ -136,13 +142,13 @@ export function PolicyDisclosurePage({ dataset }: { dataset: DemoDataset }) {
             <SummaryStat label="待复核项目" value={formatNumber(fullStandardSummary.reviewCount)} />
           </div>
 
-          <div className="rounded border border-slate-200 bg-slate-50 p-4">
+          <div className="subpanel-muted p-4">
             <p className="text-sm leading-6 text-slate-700">
               全量分析以披露要求层为主，覆盖 ESRS {formatNumber(fullStandardSummary.requirementRows.esrs)} 条、GRI {formatNumber(fullStandardSummary.requirementRows.gri)} 条；原始数据点保留在 Excel 的追溯表中。全量结果已导出为 {fullStandardSummary.outputName}，前端仅展示摘要和高优先级项目。
             </p>
             <div className="mt-3 grid gap-2 sm:grid-cols-4">
               {fullStandardSummary.statusCounts.map((item) => (
-                <div key={item.label} className="flex items-center justify-between rounded border border-slate-200 bg-white px-3 py-2 text-sm">
+                <div key={item.label} className="subpanel-muted flex items-center justify-between px-3 py-2 text-sm">
                   <span className="text-slate-500">{item.label}</span>
                   <span className={`font-semibold ${item.tone}`}>{formatNumber(item.value)}</span>
                 </div>
@@ -200,15 +206,22 @@ function DisclosureAttributeChart({
   const barChartOption = useMemo(
     () => ({
       animation: false,
-      tooltip: { trigger: 'axis' as const },
+      tooltip: { ...chartTooltip, trigger: 'axis' as const },
       color: chartPalette.requirementBar,
-      grid: { left: 36, right: 16, top: 20, bottom: 54 },
+      grid: { ...chartGrid, bottom: 54 },
       xAxis: {
+        ...chartCategoryAxis,
         type: 'category' as const,
         data: requirementDistribution.map((item) => item.name),
-        axisLabel: { interval: 0, rotate: 18, fontSize: 11 },
+        axisLabel: { ...chartCategoryAxis.axisLabel, interval: 0, rotate: 18 },
       },
-      yAxis: { type: 'value' as const, min: 0, max: requirementAxisMax, minInterval: 1 },
+      yAxis: {
+        ...chartValueAxis,
+        type: 'value' as const,
+        min: 0,
+        max: requirementAxisMax,
+        minInterval: 1,
+      },
       series: [
         {
           type: 'bar' as const,
@@ -278,7 +291,7 @@ function SummaryStat({ label, value }: { label: string; value: string }) {
   const displayValue = Number.isNaN(numericValue) ? value : animatedValue.toLocaleString('zh-CN')
 
   return (
-    <div className="rounded border border-slate-200 bg-white px-4 py-3">
+    <div className="subpanel-muted px-4 py-3">
       <p className="text-xs font-semibold text-slate-500">{label}</p>
       <p className="mt-2 text-2xl font-semibold text-slate-950">{displayValue}</p>
     </div>
@@ -298,7 +311,7 @@ function DisclosureGapTable({ items, onReset }: { items: DisclosureGap[]; onRese
           <button
             type="button"
             onClick={onReset}
-            className="mt-4 inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-600 transition hover:border-emerald-300 hover:text-emerald-700 hover:shadow-sm"
+            className="mt-4 inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-600 transition hover:border-emerald-300 hover:bg-slate-50 hover:text-emerald-700"
           >
             <RotateCcw className="h-3.5 w-3.5" />
             重置筛选条件
@@ -342,7 +355,7 @@ function DisclosureGapTable({ items, onReset }: { items: DisclosureGap[]; onRese
             return (
               <tr
                 key={item.id}
-                className={`border-b border-slate-100 align-top transition-all duration-150 hover:bg-slate-50/80 hover:shadow-sm even:bg-slate-50/20 ${gapLeftBorder[item.gapLevel]}`}
+                className={`border-b border-slate-100 align-top transition-colors duration-150 hover:bg-slate-50/80 even:bg-slate-50/20 ${gapLeftBorder[item.gapLevel]}`}
               >
                 <td className="py-3.5 pr-4 font-semibold text-slate-950">{item.clauseId}</td>
                 <td className="py-3.5 pr-4">
@@ -415,17 +428,17 @@ function TopGapTable({ items }: { items: typeof fullStandardSummary.topGaps }) {
             const rank = index + 1
             const rankBadge =
               rank === 1
-                ? 'bg-rose-500 text-white shadow-sm shadow-rose-200'
+                ? 'bg-rose-500 text-white'
                 : rank === 2
-                  ? 'bg-amber-500 text-white shadow-sm shadow-amber-200'
+                  ? 'bg-amber-500 text-white'
                   : rank === 3
-                    ? 'bg-sky-500 text-white shadow-sm shadow-sky-200'
+                    ? 'bg-sky-500 text-white'
                     : 'bg-slate-100 text-slate-600'
             const priorityColor = item.priority >= 82 ? 'text-rose-600' : 'text-amber-600'
             return (
               <tr
                 key={`${item.standard}-${item.clause}`}
-                className="border-b border-slate-100 align-top transition-all duration-150 hover:bg-slate-50/80 hover:shadow-sm even:bg-slate-50/20"
+                className="border-b border-slate-100 align-top transition-colors duration-150 hover:bg-slate-50/80 even:bg-slate-50/20"
               >
                 <td className="whitespace-nowrap py-4 pr-4">
                   <span
@@ -452,5 +465,3 @@ function TopGapTable({ items }: { items: typeof fullStandardSummary.topGaps }) {
     </div>
   )
 }
-
-

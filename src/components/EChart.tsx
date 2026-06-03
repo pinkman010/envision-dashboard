@@ -10,6 +10,7 @@ import {
 } from 'echarts/components'
 import { CanvasRenderer } from 'echarts/renderers'
 import type { EChartsOption } from 'echarts'
+import { chartTextStyle } from '../lib/chartTheme'
 
 // 按需注册所有项目中使用的图表类型和组件
 // - OverviewPage:     PieChart
@@ -59,7 +60,7 @@ export function EChart({ option, className }: EChartProps) {
   // option 变化时更新图表，避免 dispose/init
   useEffect(() => {
     if (chartRef.current) {
-      chartRef.current.setOption(option, true)
+      chartRef.current.setOption({ textStyle: chartTextStyle, ...option }, true)
     }
   }, [option])
 

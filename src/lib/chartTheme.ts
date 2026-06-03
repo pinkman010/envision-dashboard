@@ -1,3 +1,5 @@
+import type { EChartsOption } from 'echarts'
+
 /**
  * 统一图表语义色板
  *
@@ -49,5 +51,114 @@ export const chartPalette = {
     negative: '#f43f5e',
     info: '#0ea5e9',
     neutral: '#94a3b8',
+  },
+}
+
+export const chartTextStyle = {
+  color: '#334155',
+  fontFamily:
+    'Aptos, "Aptos Display", "Segoe UI Variable", "Microsoft YaHei UI", "PingFang SC", sans-serif',
+  fontSize: 12,
+}
+
+export const chartTooltip: NonNullable<EChartsOption['tooltip']> = {
+  backgroundColor: 'rgba(255,255,255,0.96)',
+  borderColor: '#e2e8f0',
+  borderWidth: 1,
+  padding: [8, 10],
+  textStyle: {
+    color: '#334155',
+    fontSize: 12,
+  },
+  extraCssText: 'box-shadow:0 8px 24px rgba(15,23,42,0.10);border-radius:6px;',
+}
+
+export const chartLegend = {
+  bottom: 0,
+  itemWidth: 10,
+  itemHeight: 10,
+  itemGap: 16,
+  textStyle: {
+    color: '#64748b',
+    fontSize: 12,
+  },
+}
+
+export const chartGrid = {
+  left: 36,
+  right: 18,
+  top: 22,
+  bottom: 46,
+}
+
+export const chartCategoryAxis = {
+  axisLine: {
+    lineStyle: { color: 'rgba(148,163,184,0.45)' },
+  },
+  axisTick: {
+    show: false,
+  },
+  axisLabel: {
+    color: '#64748b',
+    fontSize: 11,
+  },
+  splitLine: {
+    show: false,
+  },
+}
+
+export const chartValueAxis = {
+  axisLine: {
+    show: false,
+  },
+  axisTick: {
+    show: false,
+  },
+  axisLabel: {
+    color: '#64748b',
+    fontSize: 11,
+  },
+  splitLine: {
+    lineStyle: {
+      color: 'rgba(226,232,240,0.86)',
+    },
+  },
+}
+
+export const chartRadarStyle = {
+  splitNumber: 4,
+  splitLine: {
+    lineStyle: { color: 'rgba(226,232,240,0.92)' },
+  },
+  splitArea: {
+    areaStyle: {
+      color: ['rgba(248,250,252,0.82)', 'rgba(255,255,255,0.92)'],
+    },
+  },
+  axisLine: {
+    lineStyle: { color: 'rgba(203,213,225,0.70)' },
+  },
+  axisName: {
+    color: '#64748b',
+    fontSize: 12,
+  },
+}
+
+export const chartPieItemStyle = {
+  borderColor: '#ffffff',
+  borderWidth: 3,
+  borderRadius: 6,
+}
+
+export const chartCenterTitle = {
+  textStyle: {
+    color: '#0f172a',
+    fontSize: 24,
+    fontWeight: 700,
+  },
+  subtextStyle: {
+    color: '#64748b',
+    fontSize: 12,
+    fontWeight: 500,
   },
 }

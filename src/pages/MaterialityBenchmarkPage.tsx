@@ -4,6 +4,7 @@ import { DimensionBadge } from '../components/Badge'
 import { EChart } from '../components/EChart'
 import { Panel } from '../components/Panel'
 import { useCountUp } from '../hooks/useCountUp'
+import { chartLegend, chartRadarStyle, chartTooltip } from '../lib/chartTheme'
 import {
   dimensionLabel,
   getBenchmarkMatrix,
@@ -105,18 +106,23 @@ export function MaterialityBenchmarkPage({ dataset }: { dataset: DemoDataset }) 
           <EChart
             className="h-[360px] w-full"
             option={{
-              tooltip: {},
+              tooltip: chartTooltip,
               color: dataset.companies.map((company) => company.color),
-              legend: { bottom: 0, type: 'scroll' },
+              legend: { ...chartLegend, type: 'scroll' },
               radar: {
+                ...chartRadarStyle,
                 radius: '72%',
-                indicator: radar.indicators,
-                splitLine: { lineStyle: { color: '#dbe3ea' } },
-                axisName: { color: '#475569', fontSize: 12 },
+                indicator: radar.indicators.map((indicator) => ({
+                  ...indicator,
+                  min: 0,
+                  alignTicks: false,
+                })),
               },
               series: [
                 {
                   type: 'radar',
+                  symbolSize: 4,
+                  lineStyle: { width: 2 },
                   data: radar.series.map((series) => ({
                     value: series.value,
                     name: series.name,
@@ -135,7 +141,7 @@ export function MaterialityBenchmarkPage({ dataset }: { dataset: DemoDataset }) 
                 key={item.topicId}
                 type="button"
                 onClick={() => setSelectedTopic(item.topicId)}
-                className={`w-full rounded border p-3 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 ${selectedTopic === item.topicId ? 'border-emerald-300 bg-emerald-50 ring-1 ring-emerald-300' : 'border-slate-200 bg-white hover:border-emerald-300 hover:bg-emerald-50'}`}
+                className={`subpanel w-full p-3 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 ${selectedTopic === item.topicId ? 'border-emerald-300 bg-emerald-50/80 ring-1 ring-emerald-200' : 'hover:border-emerald-200 hover:bg-slate-100/70'}`}
               >
                 <div className="flex items-center justify-between gap-3">
                   <span className="font-semibold text-slate-950">{item.topicName}</span>
@@ -158,13 +164,13 @@ export function MaterialityBenchmarkPage({ dataset }: { dataset: DemoDataset }) 
       <Panel title="评分标准与计算方法">
         <div className="space-y-4">
           <div className="grid gap-3 lg:grid-cols-[0.95fr,1.05fr]">
-            <div className="rounded border border-emerald-100 bg-emerald-50 p-4">
+            <div className="subpanel-accent p-4">
               <p className="text-sm font-semibold text-emerald-900">实质性议题披露成熟度评分，满分 100 分。</p>
               <p className="mt-2 text-sm leading-6 text-slate-700">
                 评分评价的是企业报告中对某一议题的披露质量，关注是否讲清楚、能否被验证、是否便于横向比较；该结果不能直接等同于企业 ESG 实际绩效。
               </p>
             </div>
-            <div className="rounded border border-slate-200 bg-slate-50 p-4">
+            <div className="subpanel-muted p-4">
               <p className="text-sm font-semibold text-slate-950">计算方式</p>
               <p className="mt-2 text-sm leading-6 text-slate-700">
                 AI 先抽取各公司报告中的相关证据，再从五个维度分别判断，最后按权重加总形成综合分；所有结论后续仍需人工复核确认。
@@ -174,7 +180,7 @@ export function MaterialityBenchmarkPage({ dataset }: { dataset: DemoDataset }) 
 
           <div className="grid gap-3 md:grid-cols-5">
             {scoringFactors.map((item) => (
-              <div key={item.name} className="rounded border border-slate-200 bg-white p-3">
+              <div key={item.name} className="subpanel-muted p-3">
                 <div className="flex items-center justify-between gap-2">
                   <p className="text-sm font-semibold text-slate-950">{item.name}</p>
                   <span className="rounded bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700">{item.weight}</span>
@@ -186,7 +192,7 @@ export function MaterialityBenchmarkPage({ dataset }: { dataset: DemoDataset }) 
 
           <div className="grid gap-3 md:grid-cols-4">
             {scoreBands.map((item) => (
-              <div key={item.range} className={`rounded border border-slate-200 bg-slate-50 p-3 border-l-4 ${leftBorderMap[item.depth] ?? ''}`}>
+              <div key={item.range} className={`subpanel p-3 border-l-4 ${leftBorderMap[item.depth] ?? ''}`}>
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-sm font-semibold text-slate-950">{item.range}</span>
                   <span className={`text-xs font-semibold ${depthTextColor[item.depth]}`}>{depthLabel[item.depth]}</span>
@@ -252,7 +258,7 @@ export function MaterialityBenchmarkPage({ dataset }: { dataset: DemoDataset }) 
             const depth = getDisclosureDepthByScore(item.score)
 
             return (
-              <div key={item.id} className="rounded border border-slate-200 bg-white p-4">
+              <div key={item.id} className="subpanel-muted p-4">
                 <div className="flex items-center justify-between gap-2">
                   <h3 className="text-sm font-semibold text-slate-950">{item.companyName}</h3>
                   <DimensionBadge value={item.dimension} />
@@ -270,7 +276,7 @@ export function MaterialityBenchmarkPage({ dataset }: { dataset: DemoDataset }) 
       <Panel title="维度说明">
         <div className="grid gap-3 md:grid-cols-3">
           {(['E', 'S', 'G'] as Dimension[]).map((item) => (
-            <div key={item} className="rounded border border-slate-200 bg-slate-50 p-3">
+            <div key={item} className="subpanel-muted p-3">
               <DimensionBadge value={item} />
               <p className="mt-2 text-sm text-slate-600">
                 {dimensionLabel[item]}维度用于汇总竞对报告中与新能源行业相关的实质性议题覆盖。
