@@ -183,18 +183,20 @@ fetch('/api/v1/frontend/demo-dataset')
 ## 目录结构
 
 ```text
-public/
-  brand/                 自制 Logo 与新能源背景素材
-  data/demo-dataset.json 基础演示数据
-  generated/             全量标准库与披露差距分析数据
-data/                    本地原始资料与中间数据；Claw 行业级信号保留在批次文件中，不参与当前页面展示
-src/
-  components/            通用 UI 与图表组件
-  lib/                   统计、格式化、聚合函数
-  pages/                 四个汇报页面
-  repositories/          数据读取与校验
-  store/                 Zustand 全局状态
-  types/                 数据契约
+.
+├── public/
+│   ├── brand/                 自制 Logo 与新能源背景素材
+│   ├── data/
+│   │   └── demo-dataset.json  基础演示数据
+│   └── generated/             全量标准库与披露差距分析数据
+├── data/                      本地原始资料与中间数据；Claw 行业级信号保留在批次文件中，不参与当前页面展示
+└── src/
+    ├── components/            通用 UI 与图表组件
+    ├── lib/                   统计、格式化、聚合函数
+    ├── pages/                 四个汇报页面
+    ├── repositories/          数据读取与校验
+    ├── store/                 Zustand 全局状态
+    └── types/                 数据契约
 ```
 
 ## 验证
