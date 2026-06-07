@@ -208,7 +208,8 @@ function DisclosureAttributeChart({
     [requirementDistribution],
   )
   const animatedRequirementValues = useAnimatedBarValues(requirementValues, 760, 90)
-  const requirementAxisMax = Math.ceil(Math.max(...requirementValues, 1) * 1.15)
+  const maxValue = Math.max(...requirementValues, 1)
+  const requirementAxisMax = Math.max(Math.ceil(maxValue / 100) * 100, maxValue + 10)
 
   const barChartOption = useMemo(
     () => ({
