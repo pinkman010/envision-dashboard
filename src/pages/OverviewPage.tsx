@@ -210,7 +210,7 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
                       ) : null
                     })}
                   </div>
-                  <div className="flex flex-wrap gap-x-2 gap-y-1 text-[11px] text-slate-500">
+                  <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-[11px] text-slate-500">
                     {standardSegmentMeta.map((segment) => (
                       <HoverStat
                         key={segment.key}
