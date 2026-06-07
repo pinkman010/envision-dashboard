@@ -95,11 +95,15 @@ export function MetricCard({ label, value, hint, icon: Icon, tone, sparkline, de
   return (
     <section
       className={clsx(
-        'panel relative min-h-[118px] overflow-hidden border p-4 transition duration-200 hover:border-slate-300/80',
+        'group panel panel-interactive relative min-h-[118px] overflow-hidden border p-4',
         styles.card,
       )}
     >
-      <div className={clsx('absolute inset-x-0 top-0 h-1', styles.accent)} />
+      <div className={clsx('absolute inset-x-0 top-0 h-1 overflow-hidden', styles.accent)}>
+        <div className="h-full w-full opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+          <div className="accent-sheen h-full w-full bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+        </div>
+      </div>
       <div className="relative flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <p className="text-sm font-medium text-slate-500">{label}</p>

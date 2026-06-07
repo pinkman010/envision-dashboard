@@ -6,6 +6,7 @@ export function Panel({
   action,
   children,
   className = '',
+  contentClassName,
   showInfo = false,
   infoTip,
 }: {
@@ -13,6 +14,7 @@ export function Panel({
   action?: React.ReactNode
   children: React.ReactNode
   className?: string
+  contentClassName?: string
   showInfo?: boolean
   infoTip?: string
 }) {
@@ -23,8 +25,8 @@ export function Panel({
       {title ? (
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <div className="h-4 w-1 rounded-full bg-emerald-500" />
-            <h2 className="text-base font-semibold text-slate-950">{title}</h2>
+            <div className="h-4 w-1 rounded-full bg-gradient-to-b from-emerald-500 to-emerald-300 shadow-[0_0_6px_rgba(16,185,129,0.25)]" />
+            <h2 className="text-base font-semibold tracking-tight text-slate-950">{title}</h2>
             {showInfo ? (
               <div
                 className="relative"
@@ -54,7 +56,7 @@ export function Panel({
           {action}
         </div>
       ) : null}
-      {children}
+      {contentClassName ? <div className={contentClassName}>{children}</div> : children}
     </section>
   )
 }

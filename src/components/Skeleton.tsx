@@ -9,7 +9,7 @@ export function Skeleton({ className = '', variant = 'rect' }: SkeletonProps) {
   return (
     <div
       className={clsx(
-        'animate-pulse bg-slate-200',
+        'animate-shimmer',
         variant === 'circle' && 'rounded-full',
         variant === 'rect' && 'rounded-md',
         variant === 'text' && 'rounded',

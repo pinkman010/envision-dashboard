@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, type CSSProperties, type ReactNode } from 'react'
 import type { EChartsOption } from 'echarts'
 import {
   BookOpen,
@@ -63,22 +63,23 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
     minor: '',
   }
 
+  const standardSegmentMeta = [
+    { key: 'disclosed', label: '已披露', bar: 'bg-emerald-500', text: 'text-emerald-700', color: '#10b981' },
+    { key: 'partial', label: '部分', bar: 'bg-amber-400', text: 'text-amber-700', color: '#f59e0b' },
+    { key: 'pending', label: '待确认', bar: 'bg-sky-400', text: 'text-sky-700', color: '#0ea5e9' },
+    { key: 'missing', label: '缺失', bar: 'bg-rose-500', text: 'text-rose-700', color: '#f43f5e' },
+  ] as const
+
   const gapDistributionTone: Record<string, string> = {
     重大差距: 'bg-rose-500',
     轻微差距: 'bg-amber-400',
     无差距: 'bg-emerald-500',
   }
   const gapDistributionCardTone: Record<string, string> = {
-    重大差距: 'text-rose-700',
-    轻微差距: 'text-amber-700',
-    无差距: 'text-emerald-700',
+    重大差距: 'text-rose-700 border-rose-100 bg-rose-50/70 hover:border-rose-300 hover:shadow-[0_6px_18px_rgba(244,63,94,0.12)]',
+    轻微差距: 'text-amber-700 border-amber-100 bg-amber-50/70 hover:border-amber-300 hover:shadow-[0_6px_18px_rgba(245,158,11,0.12)]',
+    无差距: 'text-emerald-700 border-emerald-100 bg-emerald-50/70 hover:border-emerald-300 hover:shadow-[0_6px_18px_rgba(16,185,129,0.12)]',
   }
-  const standardSegmentMeta = [
-    { key: 'disclosed', label: '已披露', bar: 'bg-emerald-500' },
-    { key: 'partial', label: '部分', bar: 'bg-amber-400' },
-    { key: 'pending', label: '待确认', bar: 'bg-sky-400' },
-    { key: 'missing', label: '缺失', bar: 'bg-rose-500' },
-  ] as const
 
   const totalGapDistribution = gapDistribution.reduce((sum, item) => sum + item.value, 0)
   const kpiIcons = [FileText, ClipboardList, BookOpen, MessageSquareWarning]
@@ -171,8 +172,14 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
 
       {/* Row 3: 标准、差距、任务、复核 */}
       <div className="grid items-stretch gap-4 xl:grid-cols-4">
-        <Panel title="标准总体进度" className="h-full" showInfo infoTip="基于 ESRS 与 GRI 全量标准条款的总体完成率。">
-          <div className="grid min-h-[294px] gap-3">
+        <Panel
+          title="标准总体进度"
+          className="flex h-full flex-col"
+          contentClassName="flex flex-1 flex-col"
+          showInfo
+          infoTip="基于 ESRS 与 GRI 全量标准条款的总体完成率。"
+        >
+          <div className="grid min-h-[294px] flex-1 content-between gap-3">
             {standardProgress.map((item) => {
               const total = Math.max(item.total, 1)
 
@@ -196,17 +203,23 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
                       return value > 0 ? (
                         <div
                           key={segment.key}
-                          className={segment.bar}
+                          className={`${segment.bar} h-full transition-opacity hover:opacity-80`}
                           style={{ width: `${value > 0 && width < 1 ? 1 : width}%` }}
+                          title={formatHoverDetail(segment.label, value, total)}
                         />
                       ) : null
                     })}
                   </div>
                   <div className="flex flex-wrap gap-x-2 gap-y-1 text-[11px] text-slate-500">
                     {standardSegmentMeta.map((segment) => (
-                      <span key={segment.key} className="whitespace-nowrap">
-                        {segment.label} <span className="font-semibold text-slate-700">{formatNumber(item[segment.key])}</span>
-                      </span>
+                      <HoverStat
+                        key={segment.key}
+                        label={segment.label}
+                        value={item[segment.key]}
+                        total={total}
+                        color={segment.color}
+                        textClassName={segment.text}
+                      />
                     ))}
                   </div>
                 </div>
@@ -215,8 +228,14 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
           </div>
         </Panel>
 
-        <Panel title="披露差距分布" className="h-full" showInfo infoTip="基于 ESRS 与 GRI 全量标准库，待人工确认纳入轻微差距统计。">
-          <div className="flex min-h-[294px] flex-col justify-between gap-3">
+        <Panel
+          title="披露差距分布"
+          className="flex h-full flex-col"
+          contentClassName="flex flex-1 flex-col"
+          showInfo
+          infoTip="基于 ESRS 与 GRI 全量标准库，待人工确认纳入轻微差距统计。"
+        >
+          <div className="flex min-h-[294px] flex-1 flex-col justify-between gap-3">
             <div className="subpanel-accent">
               <div className="flex items-start justify-between gap-3">
                 <div>
@@ -236,9 +255,9 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
                   return item.value > 0 ? (
                     <div
                       key={item.name}
-                      className={`${gapDistributionTone[item.name] ?? 'bg-slate-400'} h-full`}
+                      className={`${gapDistributionTone[item.name] ?? 'bg-slate-400'} h-full transition-opacity hover:opacity-80`}
                       style={{ width: `${barPercent}%` }}
-                      title={`${item.name} ${formatNumber(item.value)} 项`}
+                      title={formatHoverDetail(item.name, item.value, totalGapDistribution)}
                     />
                   ) : null
                 })}
@@ -251,7 +270,14 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
                 const displayPercent = item.value > 0 && rawPercent < 1 ? '<1%' : `${percent}%`
 
                 return (
-                  <div key={item.name} className={`subpanel-muted px-3 py-1.5 ${gapDistributionCardTone[item.name] ?? 'text-slate-700'}`}>
+                  <HoverStatCard
+                    key={item.name}
+                    label={item.name}
+                    value={item.value}
+                    total={totalGapDistribution}
+                    className={`px-3 py-1.5 ${gapDistributionCardTone[item.name] ?? 'text-slate-700 border-slate-100 bg-slate-50/70'}`}
+                    valueClassName="text-base"
+                  >
                     <div className="flex items-center justify-between gap-3">
                       <span className="text-xs font-semibold">{item.name}</span>
                       <span className="text-xs font-bold">{displayPercent}</span>
@@ -260,7 +286,7 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
                       {formatNumber(item.value)}
                       <span className="ml-1 text-xs font-semibold text-slate-500">项</span>
                     </p>
-                  </div>
+                  </HoverStatCard>
                 )
               })}
             </div>
@@ -269,7 +295,8 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
 
         <Panel
           title="最新分析任务"
-          className="h-full"
+          className="flex h-full flex-col"
+          contentClassName="flex flex-1 flex-col"
           action={
             <RouterLink to="/policy" className="text-xs font-semibold text-emerald-700 hover:text-emerald-800">
               更多 →
@@ -295,7 +322,12 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
                 )
 
               return (
-                <div key={task.id} className="subpanel-muted p-2.5 transition hover:bg-slate-100/70">
+                <div
+                  key={task.id}
+                  className="subpanel-muted group relative p-2.5 transition hover:bg-slate-100/70 focus-visible:ring-2 focus-visible:ring-emerald-500/40"
+                  tabIndex={0}
+                  aria-label={`${task.title}: ${cfg.label} (${task.uploadedAt})`}
+                >
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-semibold text-slate-950">{task.title}</p>
@@ -318,6 +350,7 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
                       />
                     </div>
                   )}
+                  <HoverTooltip detail={`${task.title}: ${cfg.label} (${task.uploadedAt})`} />
                 </div>
               )
             })}
@@ -326,7 +359,8 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
 
         <Panel
           title="人工复核状态"
-          className="h-full"
+          className="flex h-full flex-col"
+          contentClassName="flex flex-1 flex-col"
           action={
             <RouterLink to="/policy" className="text-xs font-semibold text-emerald-700 hover:text-emerald-800">
               更多 →
@@ -334,13 +368,20 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
           }
         >
           <div className="flex min-h-[294px] flex-col justify-between">
-            <EChart option={reviewChartOption} className="h-40 w-full" />
+            <EChart option={reviewChartOption} className="h-40 w-full shrink-0" />
             <div className="mt-2 grid grid-cols-2 gap-2">
               {reviewStatus.items.map((item) => {
                 const percent = reviewStatus.total > 0 ? Math.round((item.count / reviewStatus.total) * 100) : 0
 
                 return (
-                  <div key={item.name} className="subpanel-muted px-2.5 py-2">
+                  <HoverStatCard
+                    key={item.name}
+                    label={item.name}
+                    value={item.count}
+                    total={reviewStatus.total}
+                    color={item.color}
+                    className="px-2.5 py-2"
+                  >
                     <div className="flex items-center gap-1.5">
                       <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: item.color }} />
                       <span className="text-xs font-semibold text-slate-700">{item.name}</span>
@@ -349,7 +390,7 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
                       <span className="text-base font-bold text-slate-950">{item.count}</span>
                       <span className="text-[11px] text-slate-400">{percent}%</span>
                     </div>
-                  </div>
+                  </HoverStatCard>
                 )
               })}
             </div>
@@ -403,6 +444,85 @@ export function OverviewPage({ dataset }: { dataset: DemoDataset }) {
           ))}
         </div>
       </Panel>
+    </div>
+  )
+}
+
+function formatHoverDetail(label: string, value: number, total: number) {
+  const percent = total > 0 ? ((value / total) * 100).toFixed(2) : '0.00'
+  return `${label}: ${formatNumber(value)}项 (${percent}%)`
+}
+
+function HoverTooltip({ detail }: { detail: string }) {
+  return (
+    <span className="pointer-events-none absolute bottom-full left-1/2 z-40 mb-2 max-w-[calc(100vw-2rem)] -translate-x-1/2 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 opacity-0 shadow-lg transition-opacity duration-[250ms] group-hover:opacity-100 group-focus-visible:opacity-100">
+      {detail}
+    </span>
+  )
+}
+
+function HoverStat({
+  label,
+  value,
+  total,
+  color,
+  textClassName,
+}: {
+  label: string
+  value: number
+  total: number
+  color: string
+  textClassName?: string
+}) {
+  const detail = formatHoverDetail(label, value, total)
+
+  return (
+    <span
+      className="group relative inline-flex items-center gap-1 rounded px-1 py-0.5 outline-none transition-[background-color,box-shadow] duration-[250ms] hover:bg-white hover:shadow-sm focus-visible:bg-white focus-visible:ring-2 focus-visible:ring-emerald-500/40"
+      tabIndex={0}
+      aria-label={detail}
+    >
+      <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: color }} />
+      <span>
+        {label} <span className={`font-semibold ${textClassName ?? 'text-slate-700'}`}>{formatNumber(value)}</span>
+      </span>
+      <HoverTooltip detail={detail} />
+    </span>
+  )
+}
+
+function HoverStatCard({
+  label,
+  value,
+  total,
+  color,
+  className = '',
+  children,
+}: {
+  label: string
+  value: number
+  total: number
+  color?: string
+  className?: string
+  valueClassName?: string
+  children: ReactNode
+}) {
+  const detail = formatHoverDetail(label, value, total)
+  const hoverColor = color ?? '#cbd5e1'
+  const hoverStyle = {
+    '--hover-color': hoverColor,
+    '--hover-shadow': `${hoverColor}1f`,
+  } as CSSProperties
+
+  return (
+    <div
+      className={`subpanel-muted group relative border transition-[background-color,border-color,box-shadow] duration-[250ms] hover:border-[var(--hover-color)] hover:shadow-[0_6px_18px_var(--hover-shadow)] focus-visible:ring-2 focus-visible:ring-emerald-500/40 ${className}`}
+      style={hoverStyle}
+      tabIndex={0}
+      aria-label={detail}
+    >
+      {children}
+      <HoverTooltip detail={detail} />
     </div>
   )
 }

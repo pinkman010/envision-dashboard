@@ -196,7 +196,7 @@ export function AppShell({
           src="/visuals/sidebar-renewable-energy.webp"
           alt=""
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 h-full w-full object-cover object-[88%_58%] opacity-[0.48] brightness-95 saturate-125 contrast-125"
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover object-[88%_58%] opacity-[0.48] brightness-95 saturate-125 contrast-125 animate-ken-burns"
         />
         <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.66)_0%,rgba(255,255,255,0.50)_28%,rgba(255,255,255,0.34)_58%,rgba(236,253,245,0.24)_100%)]" />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_76%_10%,rgba(20,184,166,0.12),transparent_38%),radial-gradient(circle_at_25%_86%,rgba(16,185,129,0.12),transparent_34%)]" />
@@ -239,7 +239,7 @@ export function AppShell({
             alt=""
             aria-hidden="true"
             className={clsx(
-              'pointer-events-none absolute inset-0 h-full w-full object-cover opacity-[0.34] brightness-95 saturate-125 contrast-125',
+              'pointer-events-none absolute inset-0 h-full w-full object-cover opacity-[0.34] brightness-95 saturate-125 contrast-125 animate-ken-burns',
             )}
             style={{ objectPosition: currentMeta.visualFillPosition }}
           />

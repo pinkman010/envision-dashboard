@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { FileSearch, Frown, RotateCcw } from 'lucide-react'
+import { FileSearch } from 'lucide-react'
 import type { DemoDataset, Dimension, DisclosureGap, DisclosureStatus, GapLevel, RequirementType } from '../types/dataset'
 import {
   DimensionBadge,
@@ -8,6 +8,7 @@ import {
   RequirementBadge,
 } from '../components/Badge'
 import { EChart } from '../components/EChart'
+import { EmptyState } from '../components/EmptyState'
 import { Panel } from '../components/Panel'
 import { Select } from '../components/Select'
 import { useCountUp } from '../hooks/useCountUp'
@@ -92,8 +93,8 @@ export function PolicyDisclosurePage({ dataset }: { dataset: DemoDataset }) {
 
   return (
     <div className="space-y-5">
-      <div className="grid gap-5 xl:grid-cols-[0.9fr,1.1fr]">
-        <Panel title="标准覆盖概览">
+      <div className="grid items-stretch gap-5 xl:grid-cols-[0.9fr,1.1fr]">
+        <Panel title="标准覆盖概览" className="flex h-full flex-col" contentClassName="flex flex-1 flex-col">
           <div className="grid gap-3">
             {standardProgress.map((item) => (
               <div key={item.standardType} className="subpanel p-4">
@@ -125,8 +126,11 @@ export function PolicyDisclosurePage({ dataset }: { dataset: DemoDataset }) {
           </div>
         </Panel>
 
-        <Panel title="披露属性状态">
-          <DisclosureAttributeChart requirementDistribution={requirementDistribution} />
+        <Panel title="披露属性状态" className="flex h-full flex-col" contentClassName="flex flex-1">
+          <DisclosureAttributeChart
+            requirementDistribution={requirementDistribution}
+            className="min-h-[236px] w-full flex-1"
+          />
         </Panel>
       </div>
 
@@ -194,8 +198,10 @@ type RequirementDistributionItem = {
 
 function DisclosureAttributeChart({
   requirementDistribution,
+  className = 'h-56 w-full',
 }: {
   requirementDistribution: RequirementDistributionItem[]
+  className?: string
 }) {
   const requirementValues = useMemo(
     () => requirementDistribution.map((item) => item.value),
@@ -235,7 +241,7 @@ function DisclosureAttributeChart({
     [animatedRequirementValues, requirementAxisMax, requirementDistribution],
   )
 
-  return <EChart option={barChartOption} className="h-56 w-full" />
+  return <EChart option={barChartOption} className={className} />
 }
 
 function easeOutCubic(progress: number) {
@@ -277,9 +283,9 @@ function useAnimatedBarValues(targets: number[], duration = 760, delayStep = 90)
 function AnimatedProgressBar({ target }: { target: number }) {
   const animated = useCountUp(target, 700)
   return (
-    <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-100">
+    <div className="relative mt-4 h-2 overflow-hidden rounded-full bg-slate-100">
       <div
-        className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400 transition-none"
+        className="progress-sheen relative h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400 transition-none"
         style={{ width: `${animated}%` }}
       />
     </div>
@@ -347,23 +353,13 @@ function PriorityScoringExplanation() {
 function DisclosureGapTable({ items, onReset }: { items: DisclosureGap[]; onReset?: () => void }) {
   if (items.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50/80 p-10 text-center">
-        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-slate-100">
-          <Frown className="h-7 w-7 text-slate-400" />
-        </div>
-        <p className="mt-4 text-sm font-semibold text-slate-600">当前条件下暂无对应披露差距结果</p>
-        <p className="mt-1 text-xs text-slate-400">请尝试调整上方筛选条件</p>
-        {onReset && (
-          <button
-            type="button"
-            onClick={onReset}
-            className="mt-4 inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-600 transition hover:border-emerald-300 hover:bg-slate-50 hover:text-emerald-700"
-          >
-            <RotateCcw className="h-3.5 w-3.5" />
-            重置筛选条件
-          </button>
-        )}
-      </div>
+      <EmptyState
+        title="当前条件下暂无对应披露差距结果"
+        description="请尝试调整上方筛选条件"
+        onReset={onReset}
+        resetLabel="重置筛选条件"
+        variant="filter"
+      />
     )
   }
 
@@ -401,7 +397,7 @@ function DisclosureGapTable({ items, onReset }: { items: DisclosureGap[]; onRese
             return (
               <tr
                 key={item.id}
-                className={`border-b border-slate-100 align-top transition-colors duration-150 hover:bg-slate-50/80 even:bg-slate-50/20 ${gapLeftBorder[item.gapLevel]}`}
+                className={`group border-b border-slate-100 align-top transition-colors duration-[250ms] ease-out hover:bg-slate-50/80 even:bg-slate-50/20 ${gapLeftBorder[item.gapLevel]} hover:shadow-[2px_0_8px_rgba(16,185,129,0.08)]`}
               >
                 <td className="py-3.5 pr-4 font-semibold text-slate-950">{item.clauseId}</td>
                 <td className="py-3.5 pr-4">
@@ -446,7 +442,7 @@ function TopGapTable({ items }: { items: DisclosureGap[] }) {
           <col className="w-[11%]" />
           <col className="w-[9%]" />
         </colgroup>
-        <thead>
+        <thead className="shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
           <tr className="border-b border-slate-200 bg-slate-100 text-xs uppercase tracking-wider text-slate-500">
             <th className="whitespace-nowrap py-3 pr-4 font-semibold">排名</th>
             <th className="whitespace-nowrap py-3 pr-4 font-semibold">标准</th>
@@ -472,7 +468,7 @@ function TopGapTable({ items }: { items: DisclosureGap[] }) {
             return (
               <tr
                 key={item.id}
-                className="border-b border-slate-100 align-top transition-colors duration-150 hover:bg-slate-50/80 even:bg-slate-50/20"
+                className="group border-b border-slate-100 align-top transition-colors duration-[250ms] ease-out hover:bg-slate-50/80 even:bg-slate-50/20 hover:shadow-[2px_0_8px_rgba(16,185,129,0.08)]"
               >
                 <td className="whitespace-nowrap py-4 pr-4">
                   <span
