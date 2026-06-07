@@ -54,7 +54,7 @@ const scoringFactors = [
   { name: '披露完整度', weight: '30%', desc: '是否说明治理机制、政策制度、管理措施、责任部门和执行流程。' },
   { name: '量化指标', weight: '20%', desc: '是否披露具体数据、年度表现、覆盖范围和可对比指标。' },
   { name: '目标与进展', weight: '15%', desc: '是否披露阶段性目标、长期目标、完成进度或后续改进计划。' },
-  { name: '证据质量与可比性', weight: '10%', desc: '报告证据是否清晰、可追溯，并便于与竞对横向比较。' },
+  { name: '证据质量与可比性', weight: '10%', desc: '报告证据是否清晰、可追溯，并便于与同行横向比较。' },
 ]
 
 const scoreBands: Array<{ range: string; depth: DisclosureDepth; desc: string }> = [
@@ -134,7 +134,7 @@ export function MaterialityBenchmarkPage({ dataset }: { dataset: DemoDataset }) 
           />
         </Panel>
 
-        <Panel title="远景相对竞对差距" className="h-[444px] overflow-hidden">
+        <Panel title="远景对标差距" className="h-[444px] overflow-hidden">
           <div className="h-[360px] space-y-3 overflow-y-auto pr-1">
             {gaps.map((item) => (
               <button
@@ -152,7 +152,7 @@ export function MaterialityBenchmarkPage({ dataset }: { dataset: DemoDataset }) 
                 </div>
                 <div className="mt-2 flex items-center gap-2 text-xs text-slate-500">
                   <span>远景 {item.envisionScore}</span>
-                  <span>竞对均值 {item.peerAverage}</span>
+                  <span>同行均值 {item.peerAverage}</span>
                 </div>
                 <p className="mt-2 text-xs leading-5 text-slate-500">{item.signal}</p>
               </button>
@@ -279,7 +279,7 @@ export function MaterialityBenchmarkPage({ dataset }: { dataset: DemoDataset }) 
             <div key={item} className="subpanel-muted p-3">
               <DimensionBadge value={item} />
               <p className="mt-2 text-sm text-slate-600">
-                {dimensionLabel[item]}维度用于汇总竞对报告中与新能源行业相关的实质性议题覆盖。
+                {dimensionLabel[item]}维度用于汇总同行报告中与新能源行业相关的实质性议题覆盖。
               </p>
             </div>
           ))}

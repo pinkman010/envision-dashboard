@@ -17,7 +17,7 @@ import { BackToTop } from './BackToTop'
 const navItems = [
   { to: '/', label: '首页总览', icon: Gauge },
   { to: '/policy', label: '政策与披露分析', icon: FileSearch },
-  { to: '/benchmark', label: '实质性议题竞对', icon: BarChart3 },
+  { to: '/benchmark', label: '实质性议题对标', icon: BarChart3 },
   { to: '/claw', label: 'Claw 舆情监测', icon: Network },
 ]
 
@@ -36,7 +36,7 @@ const pageMeta: Record<
 > = {
   '/': {
     title: '首页总览',
-    description: 'ESG 披露、竞对议题与 Claw 舆情一体化展示',
+    description: 'ESG 披露、对标议题与 Claw 舆情一体化展示',
     visual: '/visuals/overview-dashboard-hero.webp',
     visualFillPosition: '38% 50%',
     visualFocusPosition: '38% 50%',
@@ -55,7 +55,7 @@ const pageMeta: Record<
     visualFocusShift: 'translate-x-[20%] translate-y-0',
   },
   '/benchmark': {
-    title: '实质性议题竞对分析',
+    title: '实质性议题对标分析',
     description: '固定范围：远景能源、西门子能源、VESTAS、明阳智能、金风科技。对比议题覆盖、披露深度和证据质量。',
     visual: '/visuals/module-materiality-benchmark.webp',
     visualFillPosition: '64% 48%',
@@ -107,7 +107,7 @@ function SidebarDataSnapshot({ dataset }: { dataset: DemoDataset }) {
     { label: '报告周期', value: `${dataset.meta.reportYear}` },
     { label: '标准口径', value: 'ESRS / GRI' },
     { label: '条款覆盖', value: `${dataset.standards.esrs.length + dataset.standards.gri.length} 条` },
-    { label: '竞对样本', value: `${dataset.companies.length} 家` },
+    { label: '对标样本', value: `${dataset.companies.length} 家` },
     { label: '舆情样本', value: `Claw ${dataset.publicOpinion.length} 条` },
   ]
 
