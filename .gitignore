@@ -3,6 +3,7 @@ dist/
 .playwright-mcp/
 data/
 outputs/
+tmp/
 
 .env
 .env.*
