@@ -42,7 +42,7 @@ GET /api/v1/frontend/demo-dataset
 只要返回结构与 `demo-dataset.json` 一致，页面组件不需要重构。
 
 ### 不再使用 Mock.js + Axios
-本项目不是模拟接口联调，而是前端汇报系统。使用 JSON 文件 + repository 更直接，也更贴近结项演示场景。
+本项目定位为前端汇报系统，使用 JSON 文件 + repository 读取完整数据包，更贴近结项演示场景。
 
 ---
 
@@ -98,6 +98,19 @@ GET /api/v1/frontend/demo-dataset
 public/data/demo-dataset.json
 ```
 
+当前数据规模：
+
+| 字段 | 数量 |
+|------|------|
+| `companies` | 5 |
+| `reports` | 5 |
+| `standards.esrs` | 945 |
+| `standards.gri` | 503 |
+| `policyDisclosureAnalysis` | 1448 |
+| `materialityBenchmark` | 80 |
+| `publicOpinion` | 45 |
+| `auditTrail` | 11 |
+
 顶层结构：
 
 ```ts
@@ -142,6 +155,7 @@ esg-dashboard/
 │   └── data/
 │       └── demo-dataset.json
 ├── scripts/
+│   ├── rebuild-materiality-benchmark.py
 │   └── serve-dist.mjs
 ├── src/
 │   ├── components/
@@ -227,8 +241,10 @@ PowerShell 下优先使用 `npm.cmd`，避免 `npm.ps1` 被执行策略拦截。
 ## 九、验证状态
 
 - `npm.cmd run build` 已通过。
-- 四个页面均可访问。
-- 控制台无运行错误。
+- 首页总览、政策与披露分析、实质性议题对标、Claw 舆情监测四个页面均可访问。
+- 页面关键指标显示 `1448 条`、`5 家`、`Claw 45 条`。
+- 浏览器网络请求只出现 `/generated/full-standard-disclosure.json`，未请求 `/data/demo-dataset.json`。
+- 控制台无错误。
 - 1586 × 992 桌面视口无横向溢出。
 - 390 × 844 移动视口无横向溢出。
 - 当前构建存在 ECharts 包体积提示，不影响内部汇报演示。

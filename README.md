@@ -4,6 +4,13 @@
 
 当前版本不连接真实后端，前端运行时读取两类本地静态数据：`public/data/demo-dataset.json` 提供基础演示数据，`public/generated/full-standard-disclosure.json` 提供 ESRS / GRI 全量标准库及披露差距分析，并在加载后覆盖基础数据中的标准库和披露分析字段。架构保留数据读取层，后续接 FastAPI 后端时优先替换 repository，不重构页面。
 
+## 最新状态
+
+- 已完成单一数据源改造，前端运行时只请求 `/generated/full-standard-disclosure.json`。
+- `public/data/demo-dataset.json` 保留为历史对照和回滚材料，不参与页面加载。
+- 当前完整数据包包含 5 家公司、5 份报告、1448 条标准披露分析、80 条实质性议题对标记录、45 条 Claw 公司级舆情样本和 11 条审计记录。
+- 已完成生产构建和浏览器验证：四个页面均可加载，页面显示 `1448 条`、`5 家`、`Claw 45 条`，控制台无错误，网络请求未出现旧数据源。
+
 ## 核心模块
 
 ### 1. 首页总览
@@ -114,6 +121,19 @@ public/generated/full-standard-disclosure.json
 
 前端启动时会先读取并校验 `public/data/demo-dataset.json`，再读取 `public/generated/full-standard-disclosure.json`。全量标准库文件用于覆盖 `standards` 与 `policyDisclosureAnalysis`，是政策披露模块的关键依赖；如果该文件缺失、加载失败或结构不符合契约，当前实现会导致整体数据校验失败，页面无法正常展示。
 
+当前数据规模：
+
+| 字段 | 数量 |
+|------|------|
+| `companies` | 5 |
+| `reports` | 5 |
+| `standards.esrs` | 945 |
+| `standards.gri` | 503 |
+| `policyDisclosureAnalysis` | 1448 |
+| `materialityBenchmark` | 80 |
+| `publicOpinion` | 45 |
+| `auditTrail` | 11 |
+
 当前版本已将 Claw 前端公司级舆情样本更新为 2026-06-03 批次数据。Claw 批次文件中的行业级信号未进入当前前端页面展示，仅保留在本地数据文件中用于审计回溯。
 
 当前竞对报告样本仍为 2024 年报告，不代表截至 2026-06-04 的最新公开报告全量覆盖。需要更新到 2025 年或更晚报告时，应重新抽取报告、重建实质性议题竞对分析和相关证据。
@@ -204,8 +224,10 @@ fetch('/api/v1/frontend/demo-dataset')
 已验证：
 
 - `npm.cmd run build` 构建通过。
-- 四个页面均可访问。
-- 控制台无运行错误。
+- 首页总览、政策与披露分析、实质性议题对标、Claw 舆情监测四个页面均可访问。
+- 浏览器验证显示 `1448 条`、`5 家`、`Claw 45 条` 等关键指标。
+- 网络请求只出现 `/generated/full-standard-disclosure.json`，未请求 `/data/demo-dataset.json`。
+- 控制台无错误。
 - 1586 x 992 桌面视口无横向溢出。
 - 390 x 844 移动视口无横向溢出。
 
