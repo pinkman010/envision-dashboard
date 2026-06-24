@@ -2,12 +2,12 @@
 
 纯前端结项汇报系统，用于展示远景能源 ESG 披露差距、实质性议题竞对分析和 Claw 舆情监测结果。
 
-当前版本不连接真实后端，前端运行时读取两类本地静态数据：`public/data/demo-dataset.json` 提供基础演示数据，`public/generated/full-standard-disclosure.json` 提供 ESRS / GRI 全量标准库及披露差距分析，并在加载后覆盖基础数据中的标准库和披露分析字段。架构保留数据读取层，后续接 FastAPI 后端时优先替换 repository，不重构页面。
+当前版本不连接真实后端，前端运行时只读取 `public/generated/full-standard-disclosure.json`。该文件是完整 `DemoDataset`，由本地基础数据与 ESRS / GRI 全量披露分析片段在生成阶段合成。架构保留数据读取层，后续接 FastAPI 后端时优先替换 repository，不重构页面。
 
 ## 最新状态
 
 - 已完成单一数据源改造，前端运行时只请求 `/generated/full-standard-disclosure.json`。
-- `public/data/demo-dataset.json` 保留为历史对照和回滚材料，不参与页面加载。
+- `data/demo-dataset.base.json` 与 `data/full-standard-disclosure.fragment.json` 是本地生成输入，不会被 Vite 发布。
 - 当前完整数据包包含 5 家公司、5 份报告、1448 条标准披露分析、80 条实质性议题对标记录、45 条 Claw 公司级舆情样本和 11 条审计记录。
 - 已完成生产构建和浏览器验证：四个页面均可加载，页面显示 `1448 条`、`5 家`、`Claw 45 条`，控制台无错误，网络请求未出现旧数据源。
 
@@ -112,14 +112,23 @@ http://127.0.0.1:4173/
 
 ## 数据契约
 
-前端数据文件：
+前端运行时数据文件：
 
 ```text
-public/data/demo-dataset.json
 public/generated/full-standard-disclosure.json
 ```
 
-前端启动时会先读取并校验 `public/data/demo-dataset.json`，再读取 `public/generated/full-standard-disclosure.json`。全量标准库文件用于覆盖 `standards` 与 `policyDisclosureAnalysis`，是政策披露模块的关键依赖；如果该文件缺失、加载失败或结构不符合契约，当前实现会导致整体数据校验失败，页面无法正常展示。
+前端启动时只请求并校验 `/generated/full-standard-disclosure.json`。文件缺失、加载失败或结构不符合契约时，页面展示加载失败状态，不会回退到旧数据源。
+
+生成输入与命令：
+
+```text
+data/demo-dataset.base.json                  基础演示数据
+data/full-standard-disclosure.fragment.json  全量标准库与披露差距片段
+npm.cmd run generate:demo-dataset            合成并校验公开数据文件
+```
+
+实质性议题数据更新后，先执行 `scripts/rebuild-materiality-benchmark.py`，再执行 `npm.cmd run generate:demo-dataset`。`data/` 已被忽略；部署与代码审查只依赖公开的完整数据文件。
 
 当前数据规模：
 
@@ -175,7 +184,7 @@ src/repositories/demoDataRepository.ts
 
 ## 后端对接方式
 
-当前页面不直接读取后端接口。页面最终只依赖合并后的 `DemoDataset` 标准模型，但本地静态模式下由 repository 同时读取基础数据和全量标准库数据。
+当前页面不直接读取后端接口。本地静态模式下，repository 直接读取完整 `DemoDataset`。
 
 后续对接 `C:\Alvin\SUFE\整合实践\envision` 一类 FastAPI 后端时，推荐新增聚合接口：
 
@@ -185,10 +194,9 @@ GET /api/v1/frontend/demo-dataset
 
 接口直接返回完整 `DemoDataset` 数据结构，包含标准库、披露差距分析、实质性议题、舆情和审计记录。
 
-前端建议把当前两个静态数据读取点：
+前端当前静态数据读取点：
 
 ```ts
-fetch('/data/demo-dataset.json')
 fetch('/generated/full-standard-disclosure.json')
 ```
 
@@ -198,7 +206,7 @@ fetch('/generated/full-standard-disclosure.json')
 fetch('/api/v1/frontend/demo-dataset')
 ```
 
-这样页面组件、筛选逻辑、图表逻辑都不需要重构。若后端仍拆分基础数据和全量标准库，也需要保持二者的加载顺序、字段覆盖关系和失败处理口径一致。
+这样页面组件、筛选逻辑、图表逻辑都不需要重构。后端接口须直接返回完整 `DemoDataset`，不再由前端合并基础数据与标准库片段。
 
 ## 目录结构
 
@@ -206,10 +214,12 @@ fetch('/api/v1/frontend/demo-dataset')
 .
 ├── public/
 │   ├── brand/                 自制 Logo 与新能源背景素材
-│   ├── data/
-│   │   └── demo-dataset.json  基础演示数据
-│   └── generated/             全量标准库与披露差距分析数据
-├── data/                      本地原始资料与中间数据；Claw 行业级信号保留在批次文件中，不参与当前页面展示
+│   └── generated/
+│       └── full-standard-disclosure.json  完整 DemoDataset
+├── data/                      本地原始资料、生成输入与中间数据，不参与部署
+├── scripts/
+│   ├── build-full-demo-dataset.ts          合成并校验完整公开数据
+│   └── rebuild-materiality-benchmark.py    更新基础数据中的实质性议题对标
 └── src/
     ├── components/            通用 UI 与图表组件
     ├── lib/                   统计、格式化、聚合函数
@@ -226,7 +236,7 @@ fetch('/api/v1/frontend/demo-dataset')
 - `npm.cmd run build` 构建通过。
 - 首页总览、政策与披露分析、实质性议题对标、Claw 舆情监测四个页面均可访问。
 - 浏览器验证显示 `1448 条`、`5 家`、`Claw 45 条` 等关键指标。
-- 网络请求只出现 `/generated/full-standard-disclosure.json`，未请求 `/data/demo-dataset.json`。
+- 网络请求只出现 `/generated/full-standard-disclosure.json`。
 - 控制台无错误。
 - 1586 x 992 桌面视口无横向溢出。
 - 390 x 844 移动视口无横向溢出。

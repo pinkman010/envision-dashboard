@@ -15,7 +15,7 @@ from pypdf import PdfReader
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DATASET_PATH = ROOT / "public" / "data" / "demo-dataset.json"
+DATASET_PATH = ROOT / "data" / "demo-dataset.base.json"
 OUTPUT_DIR = ROOT / "outputs"
 FULL_TOPIC_WORKBOOK = OUTPUT_DIR / "远景能源_全量分析实质性议题清单.xlsx"
 REVIEW_OUTPUT = OUTPUT_DIR / "五家公司_实质性议题热力图_规则初筛.xlsx"
