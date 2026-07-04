@@ -418,7 +418,7 @@ function DisclosureGapTable({ items, onReset }: { items: DisclosureGap[]; onRese
                 </td>
                 <td className="px-4 py-3.5 text-left">
                   <p className="overflow-hidden leading-5 text-slate-700 [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]">{getChineseEvidenceSummary(item)}</p>
-                  <p className="mt-1 overflow-hidden text-xs leading-5 text-emerald-700 [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:1]">建议：{getChineseDisclosureRecommendation(item)}</p>
+                  <p className="mt-1 whitespace-normal text-xs leading-5 text-emerald-700">建议：{getChineseDisclosureRecommendation(item)}</p>
                 </td>
                 <td className="px-4 py-3.5 text-center text-lg font-semibold text-slate-950">{item.priority}</td>
               </tr>
