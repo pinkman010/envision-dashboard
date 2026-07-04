@@ -18,7 +18,7 @@
 | 样式 | Tailwind CSS | 原子化 CSS |
 | 图表 | ECharts | 雷达图、饼图、折线图、柱状图 |
 | 图标 | Lucide React | 轻量图标库 |
-| 数据 | JSON 主契约 | GPT 生成数据保存为 `public/data/demo-dataset.json`，前端启动自动加载 |
+| 数据 | JSON 主契约 | 前端唯一运行时数据保存为 `public/generated/full-standard-disclosure.json`，启动时自动加载并校验 |
 | 校验 | Zod | 对 JSON 数据做运行时校验，避免字段缺失导致空白页 |
 | 素材 | 自制 SVG + 公开/重绘 Logo | Logo、风机、光伏、背景线条均适合内部汇报演示 |
 
@@ -39,7 +39,7 @@
 GET /api/v1/frontend/demo-dataset
 ```
 
-只要返回结构与 `demo-dataset.json` 一致，页面组件不需要重构。
+只要返回结构与 `full-standard-disclosure.json` 一致，页面组件不需要重构。
 
 ### 不再使用 Mock.js + Axios
 本项目定位为前端汇报系统，使用 JSON 文件 + repository 读取完整数据包，更贴近结项演示场景。
@@ -95,7 +95,7 @@ GET /api/v1/frontend/demo-dataset
 主数据文件：
 
 ```
-public/data/demo-dataset.json
+public/generated/full-standard-disclosure.json
 ```
 
 当前数据规模：
@@ -152,9 +152,13 @@ esg-dashboard/
 │   ├── brand/
 │   │   ├── envision-logo.svg
 │   │   └── renewable-bg.svg
-│   └── data/
-│       └── demo-dataset.json
+│   └── generated/
+│       └── full-standard-disclosure.json
+├── data/
+│   ├── demo-dataset.base.json
+│   └── full-standard-disclosure.fragment.json
 ├── scripts/
+│   ├── build-full-demo-dataset.ts
 │   ├── rebuild-materiality-benchmark.py
 │   └── serve-dist.mjs
 ├── src/
@@ -194,7 +198,7 @@ esg-dashboard/
 1. 初始化 Vite + React + TypeScript 项目。
 2. 安装依赖：React Router、Tailwind、ECharts、Zustand、Zod、Lucide。
 3. 定义 `DemoDataset` 数据契约和 Zod 校验规则。
-4. 编写 `demoDataRepository`，从 `public/data/demo-dataset.json` 加载数据。
+4. 编写 `demoDataRepository`，从 `public/generated/full-standard-disclosure.json` 加载完整数据。
 5. 建立四个页面入口：首页总览、政策与披露分析、实质性议题竞对分析、Claw 舆情监测。
 6. 用 ECharts 实现雷达图、饼图、折线图、柱状图。
 7. 按 1586 × 992 桌面视口和移动端视口验证布局。
